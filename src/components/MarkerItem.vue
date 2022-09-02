@@ -229,6 +229,24 @@ export default {
           if (!this.vidStopLock) {
             //* 鎖定暫停
             this.vidStopLock = true
+            //* 抵達時間軸上該標記時，標記變為藍色
+            //* 取出所有標記的元素 (前三個會是套件的元件:時間軸外殼、時間軸條、時間tip)
+            const markers = this.player.elements.progress.children
+            markers.forEach(mark => {
+              const markTime = parseInt(mark.getAttribute('data-questiontime'))
+              //* 如果標記時間 === 當前影片播放的時間，標記變藍色
+              if (markTime === Math.floor(this.videoTime)) {
+                console.log(mark)
+                mark.style.backgroundColor = 'blue'
+              } else {
+                //* 如果影片播放時間不等於標記時間，則變回紅色
+                mark.style.backgroundColor = 'red'
+                //* 將套件的元件：時間軸外殼、時間軸條、時間tip 移除紅色背景(若不移除也會變紅色)
+                markers[0].style.removeProperty('background-color')
+                markers[1].style.removeProperty('background-color')
+                markers[2].style.removeProperty('background-color')
+              }
+            })
             //* 顯示題目、暫停播放
             //!  console.log('顯示題目, 暫停')
             setTimeout(() => {
