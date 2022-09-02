@@ -35,11 +35,20 @@
       </vue-plyr>
       <!-- //* 被拖曳的物件 -->
       <!-- <template v-for="(question, index) in questionsList" :key="`question${index}`"> -->
-        <div class="drop drop-style w30 bg-info text-center px-3 py-3" @mousedown="dragStart"
-            ref="dropItem">
-          <p class="text-start mb-0">標題</p><input type="text" class="drop-style">
-          <p class="text-start mb-0">內容</p><input type="text" class="drop-style">
-          <p class="text-start mb-0">答案</p><input type="text" class="drop-style">
+        <div class="drop drop-style w30 bg-info text-center px-3 py-3" @mousedown="dragStart($event,`dropItem${index}`)"
+            :ref="`dropItem${index}`" v-for="(question, index) in questionsList" :key="`question${index}`">
+          <p class="text-start mb-0">
+            標題
+            <button type="button" @click="loseIndex(index)">－</button>
+            <button type="button" @click="addIndex(index)">＋</button>
+          </p>
+          <input type="text" class="drop-style">
+
+          <p class="text-start mb-0">內容</p>
+          <input type="text" class="drop-style">
+
+          <p class="text-start mb-0">答案</p>
+          <input type="text" class="drop-style">
         </div>
       <!-- </template> -->
     </div>
@@ -55,19 +64,22 @@ export default {
       x: '',
       y: '',
       dropWrap: '', //* 被拖動的題目外層
-      dropItem: '', //* 要被拖動的題目視窗
+      currentDropItem: '', //* 當前被拖動的題目視窗
       questionsList: [] //* 老師要出的考題
     }
   },
 
   methods: {
     //* 滑鼠按下:拖動開始
-    dragStart (e) {
-      //* 視窗半透明
-      // this.$refs.dropItem.style.opacity = '0.7'
+    dragStart (e, dropItemRefName) {
+      this.currentDropItem = this.$refs[dropItemRefName][0]
       //* 滑鼠變拖曳狀
-      this.startX = e.clientX - this.dropItem.offsetLeft
-      this.startY = e.clientY - this.dropItem.offsetTop
+      this.startX = e.clientX - this.currentDropItem.offsetLeft
+      this.startY = e.clientY - this.currentDropItem.offsetTop
+      // this.startX = e.clientX - this.$refs.dropItem0[0].offsetLeft
+      // this.startY = e.clientY - this.$refs.dropItem0[0].offsetTop
+      // this.startX = e.clientX - this.dropItem.offsetLeft
+      // this.startY = e.clientY - this.dropItem.offsetTop
       //* 拖動時才開始監聽滑鼠移動、滑鼠放開
       document.addEventListener('mousemove', this.move)
       document.addEventListener('mouseup', this.stop)
@@ -81,34 +93,49 @@ export default {
       //* 一開始先決定邊界範圍
       const area = {
         left: this.dropWrap.offsetLeft,
-        right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - this.dropItem.offsetWidth,
+        right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - this.currentDropItem.offsetWidth,
+        // right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - this.$refs.dropItem0[0].offsetWidth,
+        // right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - this.dropItem.offsetWidth,
         top: this.dropWrap.offsetTop,
-        bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.dropItem.offsetHeight
+        bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.currentDropItem.offsetHeight
+        // bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.$refs.dropItem0[0].offsetHeight
+        // bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.dropItem.offsetHeight
       }
 
       //* 這個要加在move  設定left與top之前
       this.x = Math.max(Math.min(this.x, area.right), area.left)
       this.y = Math.max(Math.min(this.y, area.bottom), area.top)
-
-      this.dropItem.style.left = this.x + 'px'
-      this.dropItem.style.top = this.y + 'px'
+      // console.log(this.$refs.dropItem0[0])
+      this.currentDropItem.style.left = this.x + 'px'
+      this.currentDropItem.style.top = this.y + 'px'
+      // this.$refs.dropItem0[0].style.left = this.x + 'px'
+      // this.$refs.dropItem0[0].style.top = this.y + 'px'
+      // this.dropItem.style.left = this.x + 'px'
+      // this.dropItem.style.top = this.y + 'px'
     },
     //* 滑鼠放開:拖動結束
     stop () {
-      //* 拖曳時滑鼠超出可拖曳範圍後放開，解除半透明
-      // this.$refs.dropItem.style.opacity = '1'
       document.removeEventListener('mousemove', this.move)
       document.removeEventListener('mouseup', this.stop)
     },
+    //* 新增考題
     addQuestions () {
       console.log('新增題目')
       this.questionsList.push({})
+    },
+    //* 權重提高
+    addIndex (index) {
+      this.$refs[`dropItem${index}`][0].style.zIndex++
+    },
+    //* 權重降低
+    loseIndex (index) {
+      this.$refs[`dropItem${index}`][0].style.zIndex--
     }
   },
 
   mounted () {
     this.dropWrap = this.$refs.dropWrap
-    this.dropItem = this.$refs.dropItem
+    // this.dropItem = this.$refs.dropItem
   }
 }
 </script>
