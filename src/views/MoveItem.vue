@@ -29,11 +29,11 @@
     </vue-plyr>
     <!-- //* 被拖曳的物件 -->
     <!-- <template v-for="(question, index) in questionsList" :key="`question${index}`"> -->
-      <div class="move w30 bg-info text-center px-3 py-3" @mousedown="dragStart"
+      <div class="move move-style w30 bg-info text-center px-3 py-3" @mousedown="dragStart" @mouseup="dragEnd"
           ref="questionItem">
-        <p class="text-start mb-0">標題</p><input type="text">
-        <p class="text-start mb-0">內容</p><input type="text">
-        <p class="text-start mb-0">答案</p><input type="text">
+        <p class="text-start mb-0">標題</p><input type="text" class="move-style">
+        <p class="text-start mb-0">內容</p><input type="text" class="move-style">
+        <p class="text-start mb-0">答案</p><input type="text" class="move-style">
       </div>
     <!-- </template> -->
   </div>
@@ -53,15 +53,21 @@ export default {
   },
 
   methods: {
-    //* 拖動開始
+    //* 滑鼠按下:拖動開始
     dragStart (e) {
+      //* 視窗半透明
+      this.$refs.questionItem.style.opacity = '0.7'
+      //* 滑鼠變拖曳狀
       this.startX = e.clientX - this.questionItem.offsetLeft
       this.startY = e.clientY - this.questionItem.offsetTop
-      console.log(this.startX)
-      console.log(this.startY)
       document.addEventListener('mousemove', this.move)
       document.addEventListener('mouseup', this.stop)
     },
+    //* 滑鼠放開:拖動結束
+    dragEnd () {
+      this.$refs.questionItem.style.opacity = '1'
+    },
+    //* 滑鼠移動:移動座標
     move (e) {
       // 計算出拖曳物件最左上角座標
       this.x = e.clientX - this.startX
@@ -83,6 +89,8 @@ export default {
       this.questionItem.style.top = this.y + 'px'
     },
     stop () {
+      //* 拖曳時滑鼠超出可拖曳範圍後放開，解除半透明
+      this.$refs.questionItem.style.opacity = '1'
       document.removeEventListener('mousemove', this.move)
       document.removeEventListener('mouseup', this.stop)
     }
@@ -100,5 +108,8 @@ export default {
   top: 20%;
   left: 20%;
   user-select: none;
+}
+.move-style {
+  cursor: move;
 }
 </style>
