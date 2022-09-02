@@ -1,5 +1,5 @@
 <template>
-  <div class="w-75" @click="goVideoMarkerPosition">
+  <div class="w-75 por" @click="goVideoMarkerPosition">
     <!-- //* 影片播放器 -->
     <vue-plyr :options="options" ref="plyr">
       <video
@@ -30,7 +30,7 @@
     <!-- //* 題目視窗 -->
     <template v-for="(question, index) in questionsList" :key="`question${index}`">
       <!-- v-if="Math.floor(videoTime)===question.showTime" -->
-      <div class="w30 poa bg-info text-center px-3 py-3" :ref="question.id"              v-if="videoTime>=question.showTime&&videoTime<=question.showTime+0.5"
+      <div class="w30 poa bg-info text-center px-3 py-3" :ref="question.id" v-if="videoTime>=question.showTime&&videoTime<=question.showTime+0.5"
         :style="{top: question.top, left: question.left}">
         <h3>{{ question.title }}</h3>
         <p>{{ question.question }}</p>
@@ -58,7 +58,7 @@ export default {
           question: '1+1=?',
           answer: '2',
           showTime: 2,
-          top: '20%',
+          top: '30%',
           left: '15%'
         },
         {
@@ -67,7 +67,7 @@ export default {
           question: '星期二的前一天是星期?',
           answer: '一',
           showTime: 4,
-          top: '20%',
+          top: '30%',
           left: '25%'
         },
         {
@@ -76,7 +76,7 @@ export default {
           question: '答案為"測試題"',
           answer: '測試題',
           showTime: 6,
-          top: '20%',
+          top: '30%',
           left: '40%'
         },
         {
@@ -85,7 +85,7 @@ export default {
           question: '答案為"測試題"',
           answer: '測試題',
           showTime: 77,
-          top: '20%',
+          top: '30%',
           left: '55%'
         },
         {
@@ -94,7 +94,7 @@ export default {
           question: '答案為"測試題"',
           answer: '測試題',
           showTime: 33,
-          top: '20%',
+          top: '30%',
           left: '15%'
         },
         {
@@ -103,7 +103,7 @@ export default {
           question: '答案為"測試題"',
           answer: '測試題',
           showTime: 18,
-          top: '20%',
+          top: '30%',
           left: '40%'
         },
         {
@@ -112,7 +112,7 @@ export default {
           question: '答案為"測試題"',
           answer: '測試題',
           showTime: 120,
-          top: '20%',
+          top: '30%',
           left: '20%'
         },
         {
@@ -121,7 +121,7 @@ export default {
           question: '答案為"測試題"',
           answer: '測試題',
           showTime: 99,
-          top: '20%',
+          top: '30%',
           left: '35%'
         },
         {
@@ -130,7 +130,7 @@ export default {
           question: '答案為"測試題"',
           answer: '測試題',
           showTime: 160,
-          top: '20%',
+          top: '30%',
           left: '40%'
         }
       ],
@@ -219,9 +219,8 @@ export default {
       // const instance = event.detail.plyr
       // console.log(instance)
       this.videoTime = this.player.currentTime
-      // console.log(this.videoTime)
 
-      //! 如果題目出現時自動暫停 以下開始測試自動暫停
+      //* 題目出現時自動暫停
       this.questionsList.forEach((question, index) => {
         //* 如果影片時間抵達題目顯示時間時
         // if (Math.floor(this.videoTime) === question.showTime) {
@@ -284,7 +283,6 @@ export default {
   position: absolute;
   display: block;
   border: 3px solid #000;
-  // border-radius: 50%;
   height: 15px;
   width: 1px;
   top: 0;
