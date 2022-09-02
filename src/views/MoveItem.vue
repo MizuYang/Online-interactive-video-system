@@ -39,8 +39,9 @@
             :ref="`dropItem${index}`" v-for="(question, index) in questionsList" :key="`question${index}`">
           <p class="text-start mb-0">
             標題
-            <button type="button" @click="loseIndex(index)">－</button>
+            <button type="button" @click="loseIndex(index)" :disabled="!questionsList[index].zIndex||questionsList[index].zIndex<=0">－</button>
             <button type="button" @click="addIndex(index)">＋</button>
+            權重：<span :ref="`zIndexNum${index}`">0</span>
           </p>
           <input type="text" class="drop-style">
 
@@ -76,10 +77,7 @@ export default {
       //* 滑鼠變拖曳狀
       this.startX = e.clientX - this.currentDropItem.offsetLeft
       this.startY = e.clientY - this.currentDropItem.offsetTop
-      // this.startX = e.clientX - this.$refs.dropItem0[0].offsetLeft
-      // this.startY = e.clientY - this.$refs.dropItem0[0].offsetTop
-      // this.startX = e.clientX - this.dropItem.offsetLeft
-      // this.startY = e.clientY - this.dropItem.offsetTop
+
       //* 拖動時才開始監聽滑鼠移動、滑鼠放開
       document.addEventListener('mousemove', this.move)
       document.addEventListener('mouseup', this.stop)
@@ -94,24 +92,17 @@ export default {
       const area = {
         left: this.dropWrap.offsetLeft,
         right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - this.currentDropItem.offsetWidth,
-        // right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - this.$refs.dropItem0[0].offsetWidth,
-        // right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - this.dropItem.offsetWidth,
         top: this.dropWrap.offsetTop,
         bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.currentDropItem.offsetHeight
-        // bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.$refs.dropItem0[0].offsetHeight
-        // bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.dropItem.offsetHeight
       }
 
       //* 這個要加在move  設定left與top之前
       this.x = Math.max(Math.min(this.x, area.right), area.left)
       this.y = Math.max(Math.min(this.y, area.bottom), area.top)
-      // console.log(this.$refs.dropItem0[0])
+
+      //* 變更 wrap 拖曳位置
       this.currentDropItem.style.left = this.x + 'px'
       this.currentDropItem.style.top = this.y + 'px'
-      // this.$refs.dropItem0[0].style.left = this.x + 'px'
-      // this.$refs.dropItem0[0].style.top = this.y + 'px'
-      // this.dropItem.style.left = this.x + 'px'
-      // this.dropItem.style.top = this.y + 'px'
     },
     //* 滑鼠放開:拖動結束
     stop () {
@@ -120,22 +111,24 @@ export default {
     },
     //* 新增考題
     addQuestions () {
-      console.log('新增題目')
       this.questionsList.push({})
     },
     //* 權重提高
     addIndex (index) {
       this.$refs[`dropItem${index}`][0].style.zIndex++
+      this.$refs[`zIndexNum${index}`][0].textContent = this.$refs[`dropItem${index}`][0].style.zIndex
+      this.questionsList[index].zIndex = this.$refs[`dropItem${index}`][0].style.zIndex
     },
     //* 權重降低
     loseIndex (index) {
       this.$refs[`dropItem${index}`][0].style.zIndex--
+      this.$refs[`zIndexNum${index}`][0].textContent = this.$refs[`dropItem${index}`][0].style.zIndex
+      this.questionsList[index].zIndex = this.$refs[`dropItem${index}`][0].style.zIndex
     }
   },
 
   mounted () {
     this.dropWrap = this.$refs.dropWrap
-    // this.dropItem = this.$refs.dropItem
   }
 }
 </script>
