@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import Tooltip from '../../node_modules/bootstrap/js/src/tooltip.js'
 export default {
   data () {
     return {
@@ -192,8 +193,17 @@ export default {
           span.setAttribute('type', 'button')
           span.setAttribute('style', `left:${questionTime}%`)
           span.setAttribute('data-questionTime', item.showTime)
+          //* BS5 提示視窗元件
           span.setAttribute('title', item.title)
+          span.setAttribute('data-bs-toggle', 'tooltip')
+          span.setAttribute('data-bs-placement', 'bottom')
           progessEl.appendChild(span)
+        })
+
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        console.log('tooltipTriggerList', tooltipTriggerList)
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+          return new Tooltip(tooltipTriggerEl)
         })
       }, 500)
     },
