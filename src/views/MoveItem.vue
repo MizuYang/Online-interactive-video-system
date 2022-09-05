@@ -2,10 +2,11 @@
   <div class="container my-5">
     <!-- //* 教師新增題目 -->
     <div class="my-4">
+      <h2>教師出題</h2>
       <button type="button" @click="addQuestions">新增題目</button>
     </div>
 
-    <div class="w-75 por" @click="goVideoMarkerPosition" ref="dropWrap">
+    <div class="w-75" @click="goVideoMarkerPosition" ref="dropWrap">
       <!-- //* 影片播放器 -->
       <vue-plyr ref="plyr">
         <video
@@ -34,16 +35,16 @@
         </video>
       </vue-plyr>
       <!-- //* 被拖曳的物件 -->
-      <!-- <template v-for="(question, index) in questionsList" :key="`question${index}`"> -->
+      <template v-for="(question, index) in questionsList" :key="`questionItem${index}`">
         <div class="drop drop-style w30 bg-info text-center px-3 py-3" @mousedown="dragStart($event,`dropItem${index}`)" :data-question-id="question.id"
-            :ref="`dropItem${index}`" v-for="(question, index) in questionsList" :key="`questionItem${index}`" :style="{left:`${question.x||430}px`, top:`${question.y||257}px`}">
+            :ref="`dropItem${index}`" :style="{left:`${question.x||430}px`, top:`${question.y||257}px`}" v-if="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
           {{ index }}
           <div class="text-start mb-0">
             標題
             <button type="button" @click="loseIndex(index)" :disabled="!questionsList[index].zIndex||questionsList[index].zIndex<=0">－</button>
             <button type="button" @click="addIndex(index)">＋</button>
             權重：<span :ref="`zIndexNum${index}`">0</span>
-            <button type="button" class="btn btn-danger btn-sm ms-3 d-inline-block" @click="deleteQuestion(question.id)">X</button>
+            <button type="button" class="btn btn-danger btn-sm ms-2 d-inline-block" @click="deleteQuestion(question.id)">X</button>
           </div>
           <input type="text" class="drop-style" v-model="questionsList[index].title">
 
@@ -53,7 +54,7 @@
           <p class="text-start mb-0">答案</p>
           <input type="text" class="drop-style" v-model="questionsList[index].answer">
         </div>
-      <!-- </template> -->
+      </template>
     </div>
   </div>
 </template>
@@ -123,6 +124,7 @@ export default {
         id: this.randomString(),
         showTime: this.videoTime
       })
+      this.getMarker()
     },
     //* 權重提高
     addIndex (index) {
@@ -150,6 +152,25 @@ export default {
       const t = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'; const a = t.length; let n = ''
       for (let i = 0; i < num; i++) n += t.charAt(Math.floor(Math.random() * a))
       return n
+    },
+    //* 取得時間軸標記
+    getMarker () {
+      const progessEl = this.player.elements.progress
+      setTimeout(() => {
+        //* 得到問題顯示時間在影片中的%數位置
+        this.questionsList.forEach(item => {
+        //* 題目位置 = 題目位置時間 / 影片總時間 *100
+          const questionTime = Math.floor(item.showTime / this.player.duration * 100)
+          //* 生成題目位置標記
+          const span = document.createElement('button')
+          span.classList.add('box')
+          span.setAttribute('type', 'button')
+          span.setAttribute('style', `left:${questionTime}%`)
+          span.setAttribute('data-questionTime', item.showTime)
+          span.setAttribute('title', item.title)
+          progessEl.appendChild(span)
+        })
+      }, 500)
     }
   },
 
@@ -179,5 +200,26 @@ export default {
   &:active {
     opacity: 0.7;
   }
+}
+
+.w30 {
+  max-width: 30%;
+}
+// .por {
+//   position: relative;
+// }
+// .poa {
+//   position: absolute;
+// }
+.box {
+  position: absolute;
+  top: 0%;
+  left: 0;
+  z-index: 50;
+  padding: 8px 2px;
+  background-color: red;
+}
+.box:hover {
+  background-color: blue;
 }
 </style>

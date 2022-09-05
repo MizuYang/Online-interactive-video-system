@@ -175,6 +175,7 @@ export default {
     },
     //* 取得時間軸標記
     getMarker () {
+      //* 先抓到時間軸元素，再將標記樣式定位上去
       const progessEl = this.player.elements.progress
       setTimeout(() => {
       // this.player.currentTime = 100
