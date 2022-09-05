@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import Tooltip from '../../node_modules/bootstrap/js/src/tooltip.js'
 export default {
   data () {
     return {
@@ -72,6 +73,30 @@ export default {
       dropWrap: '', //* 被拖動的題目外層
       currentDropItem: '', //* 當前被拖動的題目視窗
       questionsList: [] //* 老師要出的考題
+    }
+  },
+
+  watch: {
+    questionsList: {
+      handler (questions) {
+        // this.hoverMarkerTips()
+        // questions.forEach(item => {
+        //   if (item.title) {
+        //     console.log('有標提ㄌ')
+        //     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        //     console.log('tooltipTriggerList', tooltipTriggerList)
+        //     tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+        //       return new Tooltip(tooltipTriggerEl)
+        //     })
+        //     console.log('tooltipTriggerList', tooltipTriggerList)
+        //     tooltipTriggerList.forEach(que => {
+        //       const title = que.getAttribute('title')
+        //       que.setAttribute('title', title)
+        //     })
+        //   }
+        // })
+      },
+      deep: true
     }
   },
 
@@ -125,7 +150,8 @@ export default {
         id: this.randomString(),
         showTime: this.videoTime
       })
-      this.getMarker()
+      // this.clearMarker() //* 清除標記(初始化)
+      this.getMarker() //* 生成標記
     },
     //* 權重提高
     addIndex (index) {
@@ -158,20 +184,50 @@ export default {
     getMarker () {
       const progessEl = this.player.elements.progress
       setTimeout(() => {
+        let str = ''
         //* 得到問題顯示時間在影片中的%數位置
         this.questionsList.forEach(item => {
         //* 題目位置 = 題目位置時間 / 影片總時間 *100
           const questionTime = Math.floor(item.showTime / this.player.duration * 100)
           //* 生成題目位置標記
-          const span = document.createElement('button')
-          span.classList.add('box')
-          span.setAttribute('type', 'button')
-          span.setAttribute('style', `left:${questionTime}%`)
-          span.setAttribute('data-questionTime', item.showTime)
-          span.setAttribute('title', item.title)
+          // const btn = document.createElement('button')
+          const span = document.createElement('span')
+          span.setAttribute('id', 'markerWarp')
+          // btn.classList.add('box')
+          // btn.setAttribute('type', 'button')
+          // btn.setAttribute('style', `left:${questionTime}%`)
+          // btn.setAttribute('data-questionTime', item.showTime)
+          // // btn.setAttribute('title', item.title)
+          // //* BS5 提示視窗元件
+          // // btn.setAttribute('title', item.title)
+          // btn.setAttribute('data-bs-toggle', 'tooltip')
+          // btn.setAttribute('data-bs-placement', 'bottom')
+          // progessEl.appendChild(btn)
           progessEl.appendChild(span)
+          str += `
+          <button type="button" class="box" id="markerWarp" style="left:${questionTime}%" data-questionTime="${item.showTime}"
+            data-bs-toggle="tooltip" data-bs-placement="bottom"></button>
+          `
         })
+        //* 使用 innerHTML 的方式覆蓋，才不會有重複生成的元素
+        const markerWarp = document.getElementById('markerWarp')
+        if (markerWarp) {
+          markerWarp.innerHTML = str
+        }
       }, 500)
+    },
+    //* 清除時間標記(初始化用)
+    clearMarker () {
+      const progessEl = this.player.elements.progress.children
+      setTimeout(() => {
+        progessEl.forEach(item => {
+          //* 如果是標記按鈕，則刪除標記按鈕
+          if (item.getAttribute('data-questiontime')) {
+            const progessFa = this.player.elements.progress
+            progessFa.removeChild(item)
+          }
+        })
+      })
     },
     //* 跳轉到題目標記處
     goVideoMarkerPosition (e) {
@@ -201,6 +257,23 @@ export default {
           markers[2].style.removeProperty('background-color')
         }
       })
+    },
+    //* 標記 hover 文字提示
+    hoverMarkerTips () {
+      // const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+      const tooltipTriggerList = [...document.querySelectorAll('[data-bs-toggle="tooltip"]')]
+      console.log(tooltipTriggerList)
+      const arr = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new Tooltip(tooltipTriggerEl)
+      })
+      console.log(arr)
+      if (arr.length > 0) {
+        this.questionsList.forEach((item, index) => {
+          if (item.title) {
+            arr[index]._config.title = item.title
+          }
+        })
+      }
     }
   },
 
@@ -217,7 +290,6 @@ export default {
     //* 取得當前影片播放時間
       this.videoTime = this.player.currentTime
 
-      //! 以下測試暫停
       //* 題目出現時自動暫停
       this.questionsList.forEach((question, index) => {
       //* 如果影片時間抵達題目顯示時間時
@@ -251,6 +323,13 @@ export default {
         }
       })
     })
+
+    // const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    // console.log(tooltipTriggerList)
+    // const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    //   return new Tooltip(tooltipTriggerEl)
+    // })
+    // console.log(tooltipList)
   }
 }
 </script>

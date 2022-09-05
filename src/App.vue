@@ -10,7 +10,9 @@
 @import "@/assets/stylesheets/all.scss";
 </style>
 
-//! 把老師的資料填進去
+//! 標記的元素會重複生成到，有地方需做初始化
+//! 標記的 hover tips 動態生成
+//! 刪除題目後，標記會從時間軸上被刪除
 questionList: [
   {
   title: '',
