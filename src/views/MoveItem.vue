@@ -162,6 +162,8 @@ export default {
     //* 取得當前影片播放時間
       this.videoTime = this.player.currentTime
     })
+    //* 將播放器時間改為"增量計數器"而不是倒數計時
+    this.player.config.invertTime = false
   }
 }
 </script>

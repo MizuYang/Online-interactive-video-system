@@ -231,6 +231,10 @@ export default {
   mounted () {
     console.log(this.$refs.plyr.player)
     this.player = this.$refs.plyr.player
+
+    //* 將播放器時間改為"增量計數器"而不是倒數計時
+    this.player.config.invertTime = false
+
     //* 取得時間軸標記
     this.getMarker()
 
