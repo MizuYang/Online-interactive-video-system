@@ -35,21 +35,23 @@
       </vue-plyr>
       <!-- //* 被拖曳的物件 -->
       <!-- <template v-for="(question, index) in questionsList" :key="`question${index}`"> -->
-        <div class="drop drop-style w30 bg-info text-center px-3 py-3" @mousedown="dragStart($event,`dropItem${index}`)"
-            :ref="`dropItem${index}`" v-for="(question, index) in questionsList" :key="`question${index}`">
-          <p class="text-start mb-0">
+        <div class="drop drop-style w30 bg-info text-center px-3 py-3" @mousedown="dragStart($event,`dropItem${index}`)" :data-question-id="question.id"
+            :ref="`dropItem${index}`" v-for="(question, index) in questionsList" :key="`questionItem${index}`" :style="{left:`${question.x||430}px`, top:`${question.y||257}px`}">
+          {{ index }}
+          <div class="text-start mb-0">
             標題
             <button type="button" @click="loseIndex(index)" :disabled="!questionsList[index].zIndex||questionsList[index].zIndex<=0">－</button>
             <button type="button" @click="addIndex(index)">＋</button>
             權重：<span :ref="`zIndexNum${index}`">0</span>
-          </p>
-          <input type="text" class="drop-style">
+            <button type="button" class="btn btn-danger btn-sm ms-3 d-inline-block" @click="deleteQuestion(question.id)">X</button>
+          </div>
+          <input type="text" class="drop-style" v-model="questionsList[index].title">
 
           <p class="text-start mb-0">內容</p>
-          <input type="text" class="drop-style">
+          <input type="text" class="drop-style" v-model="questionsList[index].content">
 
           <p class="text-start mb-0">答案</p>
-          <input type="text" class="drop-style">
+          <input type="text" class="drop-style" v-model="questionsList[index].answer">
         </div>
       <!-- </template> -->
     </div>
@@ -60,6 +62,7 @@
 export default {
   data () {
     return {
+      videoTime: 0,
       startX: '',
       startY: '',
       x: '',
@@ -100,9 +103,14 @@ export default {
       this.x = Math.max(Math.min(this.x, area.right), area.left)
       this.y = Math.max(Math.min(this.y, area.bottom), area.top)
 
-      //* 變更 wrap 拖曳位置
-      this.currentDropItem.style.left = this.x + 'px'
-      this.currentDropItem.style.top = this.y + 'px'
+      //* 取得當前移動題目窗 ID 並將當前 x,y 軸賦予到題目集裡
+      const id = this.currentDropItem.getAttribute('data-question-id')
+      const itemIndex = this.questionsList.findIndex(item => {
+        return item.id === id
+      })
+      //* 變更拖曳位置
+      this.questionsList[itemIndex].x = `${this.x}`
+      this.questionsList[itemIndex].y = `${this.y}`
     },
     //* 滑鼠放開:拖動結束
     stop () {
@@ -111,7 +119,10 @@ export default {
     },
     //* 新增考題
     addQuestions () {
-      this.questionsList.push({})
+      this.questionsList.push({
+        id: this.randomString(),
+        showTime: this.videoTime
+      })
     },
     //* 權重提高
     addIndex (index) {
@@ -124,11 +135,33 @@ export default {
       this.$refs[`dropItem${index}`][0].style.zIndex--
       this.$refs[`zIndexNum${index}`][0].textContent = this.$refs[`dropItem${index}`][0].style.zIndex
       this.questionsList[index].zIndex = this.$refs[`dropItem${index}`][0].style.zIndex
+    },
+    //* 刪除題目
+    deleteQuestion (id) {
+      //* 取得要刪除的項目位置
+      const deleteIndex = this.questionsList.findIndex(item => {
+        return item.id === id
+      })
+      this.questionsList.splice(deleteIndex, 1)
+    },
+    //* 隨機生成 ID
+    randomString () {
+      const num = 10
+      const t = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'; const a = t.length; let n = ''
+      for (let i = 0; i < num; i++) n += t.charAt(Math.floor(Math.random() * a))
+      return n
     }
   },
 
   mounted () {
     this.dropWrap = this.$refs.dropWrap
+
+    //* 取得播放器元素
+    this.player = this.$refs.plyr.player
+    this.player.on('timeupdate', (event) => {
+    //* 取得當前影片播放時間
+      this.videoTime = this.player.currentTime
+    })
   }
 }
 </script>
