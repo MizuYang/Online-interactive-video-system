@@ -171,6 +171,15 @@ export default {
           progessEl.appendChild(span)
         })
       }, 500)
+    },
+    //* 跳轉到題目標記處
+    goVideoMarkerPosition (e) {
+      const isTimelineBtn = e.target.getAttribute('data-questionTime') !== null
+      //* 如果是題目標記才執行
+      if (isTimelineBtn) {
+        const questionTime = e.target.getAttribute('data-questionTime')
+        this.player.currentTime = parseInt(questionTime)
+      }
     }
   },
 
