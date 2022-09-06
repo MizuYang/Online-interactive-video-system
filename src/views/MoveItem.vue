@@ -38,6 +38,7 @@
       <template v-for="(question, index) in questionsList" :key="`questionItem${index}`">
         <div class="drop drop-style w30 bg-info text-center px-3 py-3" @mousedown="dragStart($event,`dropItem${index}`)" :data-question-id="question.id"
             :ref="`dropItem${index}`" :style="{left:`${question.x||430}px`, top:`${question.y||257}px`}" v-if="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
+            <!-- v-if="Math.floor(videoTime)===Math.floor(question.showTime)" -->
           第{{ index+1 }}題
           <div class="text-start mb-0">
             標題
@@ -65,7 +66,7 @@ export default {
   data () {
     return {
       videoTime: 0,
-      vidStopLock: false,
+      vidStopDisabled: false,
       startX: '',
       startY: '',
       x: '',
@@ -146,11 +147,11 @@ export default {
     },
     //* 新增考題
     addQuestions () {
+      this.player.pause()
       this.questionsList.push({
         id: this.randomString(),
         showTime: this.videoTime
       })
-      // this.clearMarker() //* 清除標記(初始化)
       this.getMarker() //* 生成標記
     },
     //* 權重提高
@@ -172,6 +173,7 @@ export default {
         return item.id === id
       })
       this.questionsList.splice(deleteIndex, 1)
+      this.getMarker()
     },
     //* 隨機生成 ID
     randomString () {
@@ -230,19 +232,6 @@ export default {
       }
       // }, 500)
     },
-    //! 清除時間標記(初始化用) 若沒用到就刪ㄌㄅ
-    clearMarker () {
-      const progessEl = this.player.elements.progress.children
-      setTimeout(() => {
-        progessEl.forEach(item => {
-          //* 如果是標記按鈕，則刪除標記按鈕
-          if (item.getAttribute('data-questiontime')) {
-            const progessFa = this.player.elements.progress
-            progessFa.removeChild(item)
-          }
-        })
-      })
-    },
     //* 跳轉到題目標記處
     goVideoMarkerPosition (e) {
       const isTimelineBtn = e.target.getAttribute('data-questionTime') !== null
@@ -256,19 +245,17 @@ export default {
     currentMarkStyle () {
       //* 抵達時間軸上該標記時，標記變為藍色
       //* 取出所有標記的元素 (前三個會是套件的元件:時間軸外殼、時間軸條、時間tip)
-      const markers = this.player.elements.progress.children
+      const markers = this.player.elements.progress.children[3].children
       markers.forEach(mark => {
         const markTime = parseInt(mark.getAttribute('data-questiontime'))
+        console.log(markTime)
+        console.log(Math.floor(this.videoTime))
         //* 如果標記時間 === 當前影片播放的時間，標記變藍色
         if (markTime === Math.floor(this.videoTime)) {
           mark.style.backgroundColor = 'blue'
         } else {
           //* 如果影片播放時間不是標記時間，則變回紅色
           mark.style.backgroundColor = 'red'
-          //* 將套件的元件：時間軸外殼、時間軸條、時間tip 移除紅色背景(若不移除也會變紅色)
-          markers[0].style.removeProperty('background-color')
-          markers[1].style.removeProperty('background-color')
-          markers[2].style.removeProperty('background-color')
         }
       })
     },
@@ -307,15 +294,16 @@ export default {
       //* 題目出現時自動暫停
       this.questionsList.forEach((question, index) => {
       //* 如果影片時間抵達題目顯示時間時
+        // if (Math.floor(this.videoTime) === Math.floor(question.showTime)) {
         if (this.videoTime >= question.showTime && this.videoTime <= question.showTime + 0.5) {
         //* 如果沒鎖定暫停影片時
-          if (!this.vidStopLock) {
+          if (!this.vidStopDisabled) {
           //* 鎖定暫停
-            this.vidStopLock = true
+            this.vidStopDisabled = true
             //* 顯示題目、暫停播放
-            setTimeout(() => {
-              this.player.pause()
-            }, 200)
+            // setTimeout(() => {
+            this.player.pause()
+            // }, 200)
           }
         }
         this.currentMarkStyle()
@@ -323,17 +311,17 @@ export default {
         //* 鎖定時間 = 影片當前時間 >= 下一個題目顯示的時間(鎖定到下一個題目前解除)
         //* 如果有下一個需顯示的題目才做解除鎖定時間的計算(解決沒下一題計算時跳出的錯誤)
         if (this.questionsList[index + 1]) {
-          this.lockTime = this.videoTime >= this.questionsList[index + 1].showTime && this.videoTime <= this.questionsList[index + 1].showTime + 0.5
+          const lockTime = this.videoTime >= this.questionsList[index + 1].showTime && this.videoTime <= this.questionsList[index + 1].showTime + 0.5
           //* 如果影片時間來到下一個題目顯示的時間 (0.5秒後解除鎖定)
-          if (this.lockTime) {
-          //! console.log('我該不會執行了吧!')
-            this.vidStopLock = false
+          if (lockTime) {
+            this.vidStopDisabled = false
           }
         } else if (this.videoTime >= this.questionsList[this.questionsList.length - 1].showTime + 0.5) {
-        //* 如果當前影片時間到顯示最後一題的時間
-        //* 如果沒有下一題，則一秒後自動解除鎖定(自動解除鎖定，若用戶跳回去過去題目顯示的時間，即可正常顯示題目)
-        //! console.log('最後一題~解除鎖定')
-          this.vidStopLock = false
+        //* 如果當前影片時間到顯示最後一題的時間(沒有下一題)
+        //* 一秒後自動解除鎖定(自動解除鎖定，若用戶跳回去過去題目顯示的時間，即可正常顯示題目)
+          setTimeout(() => {
+            this.vidStopDisabled = false
+          }, 1000)
         }
       })
     })
