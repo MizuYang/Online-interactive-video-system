@@ -4,12 +4,15 @@
     <div class="my-4">
       <h2>教師出題</h2>
       <button type="button" @click="addQuestions">新增題目</button>
+      <input type="checkbox" class="ms-3" id="autoplay" v-model="options.autoplay" @change="setAutoplay">
+      <label for="autoplay">自動播放</label>
     </div>
 
     <div class="w-75" @click="goVideoMarkerPosition" ref="dropWrap">
       <!-- //* 影片播放器 -->
       <vue-plyr ref="plyr">
         <video
+          :autoplay="options.autoplay==='true'"
           controls
           crossorigin
           playsinline
@@ -65,6 +68,9 @@ import Tooltip from '../../node_modules/bootstrap/js/src/tooltip.js'
 export default {
   data () {
     return {
+      options: {
+        autoplay: localStorage.getItem('vid-autoplay') || false
+      },
       videoTime: 0,
       vidStopDisabled: false,
       startX: '',
@@ -79,23 +85,8 @@ export default {
 
   watch: {
     questionsList: {
-      handler (questions) {
+      handler () {
         this.hoverMarkerTips()
-        // questions.forEach(item => {
-        //   if (item.title) {
-        //     console.log('有標提ㄌ')
-        //     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        //     console.log('tooltipTriggerList', tooltipTriggerList)
-        //     tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-        //       return new Tooltip(tooltipTriggerEl)
-        //     })
-        //     console.log('tooltipTriggerList', tooltipTriggerList)
-        //     tooltipTriggerList.forEach(que => {
-        //       const title = que.getAttribute('title')
-        //       que.setAttribute('title', title)
-        //     })
-        //   }
-        // })
       },
       deep: true
     }
@@ -248,8 +239,6 @@ export default {
       const markers = this.player.elements.progress.children[3].children
       markers.forEach(mark => {
         const markTime = parseInt(mark.getAttribute('data-questiontime'))
-        console.log(markTime)
-        console.log(Math.floor(this.videoTime))
         //* 如果標記時間 === 當前影片播放的時間，標記變藍色
         if (markTime === Math.floor(this.videoTime)) {
           mark.style.backgroundColor = 'blue'
@@ -273,6 +262,13 @@ export default {
             arr[index]._config.title = item.title
           }
         })
+      }
+    },
+    //* 設定自動播放
+    setAutoplay () {
+      localStorage.setItem('vid-autoplay', this.options.autoplay)
+      if (this.options.autoplay) {
+        this.player.play()
       }
     }
   },
@@ -340,6 +336,7 @@ export default {
   top: 20%;
   left: 20%;
   user-select: none;
+  border:4px solid blue;
 }
 .drop-style {
   cursor: move;
