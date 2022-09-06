@@ -183,40 +183,54 @@ export default {
     //* 取得時間軸標記
     getMarker () {
       const progessEl = this.player.elements.progress
-      setTimeout(() => {
-        let str = ''
-        //* 得到問題顯示時間在影片中的%數位置
-        this.questionsList.forEach(item => {
+
+      let hasmMarkerWarp = null
+      this.player.elements.progress.children.forEach(item => {
+        //* 如果有 markerWarp 就不再重複生成 markerWarp 了
+        if (item.getAttribute('id') === 'markerWarp') {
+          hasmMarkerWarp = true
+        }
+      })
+      //! 如果沒有 markerWarp 才生成 markerWarp
+      if (!hasmMarkerWarp) {
+        //* 生成一個 span 掛在 progess 底下，用來掛載所有標記按鈕
+        const span = document.createElement('span')
+        span.setAttribute('id', 'markerWarp')
+        progessEl.appendChild(span)
+        hasmMarkerWarp = true
+      }
+      // setTimeout(() => {
+      let str = ''
+      //* 得到問題顯示時間在影片中的%數位置
+      this.questionsList.forEach(item => {
         //* 題目位置 = 題目位置時間 / 影片總時間 *100
-          const questionTime = Math.floor(item.showTime / this.player.duration * 100)
-          //* 生成題目位置標記
-          // const btn = document.createElement('button')
-          const span = document.createElement('span')
-          span.setAttribute('id', 'markerWarp')
-          // btn.classList.add('box')
-          // btn.setAttribute('type', 'button')
-          // btn.setAttribute('style', `left:${questionTime}%`)
-          // btn.setAttribute('data-questionTime', item.showTime)
-          // // btn.setAttribute('title', item.title)
-          // //* BS5 提示視窗元件
-          // // btn.setAttribute('title', item.title)
-          // btn.setAttribute('data-bs-toggle', 'tooltip')
-          // btn.setAttribute('data-bs-placement', 'bottom')
-          // progessEl.appendChild(btn)
-          progessEl.appendChild(span)
-          str += `
+        const questionTime = Math.floor(item.showTime / this.player.duration * 100)
+        //* 生成題目位置標記
+        // const btn = document.createElement('button')
+
+        // btn.classList.add('box')
+        // btn.setAttribute('type', 'button')
+        // btn.setAttribute('style', `left:${questionTime}%`)
+        // btn.setAttribute('data-questionTime', item.showTime)
+        // // btn.setAttribute('title', item.title)
+        // //* BS5 提示視窗元件
+        // // btn.setAttribute('title', item.title)
+        // btn.setAttribute('data-bs-toggle', 'tooltip')
+        // btn.setAttribute('data-bs-placement', 'bottom')
+        // progessEl.appendChild(btn)
+        str += `
           <button type="button" class="box" id="markerWarp" style="left:${questionTime}%" data-questionTime="${item.showTime}"
             data-bs-toggle="tooltip" data-bs-placement="bottom"></button>
           `
-        })
-        //* 使用 innerHTML 的方式覆蓋，才不會有重複生成的元素
-        const markerWarp = document.getElementById('markerWarp')
-        if (markerWarp) {
-          markerWarp.innerHTML = str
-        }
-      }, 500)
+      })
+      //* 使用 innerHTML 的方式覆蓋，才不會有重複生成的元素
+      const markerWarp = document.getElementById('markerWarp')
+      if (markerWarp) {
+        markerWarp.innerHTML = str
+      }
+      // }, 500)
     },
-    //* 清除時間標記(初始化用)
+    //! 清除時間標記(初始化用) 若沒用到就刪ㄌㄅ
     clearMarker () {
       const progessEl = this.player.elements.progress.children
       setTimeout(() => {
