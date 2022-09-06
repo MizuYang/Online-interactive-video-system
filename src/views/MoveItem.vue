@@ -47,13 +47,13 @@
             權重：<span :ref="`zIndexNum${index}`">0</span>
             <button type="button" class="btn btn-danger btn-sm ms-2 d-inline-block" @click="deleteQuestion(question.id)">X</button>
           </div>
-          <input type="text" class="drop-style" v-model="questionsList[index].title">
+          <input type="text" class="drop-style" v-model.lazy="questionsList[index].title">
 
           <p class="text-start mb-0">內容</p>
-          <input type="text" class="drop-style" v-model="questionsList[index].content">
+          <input type="text" class="drop-style" v-model.lazy="questionsList[index].content">
 
           <p class="text-start mb-0">答案</p>
-          <input type="text" class="drop-style" v-model="questionsList[index].answer">
+          <input type="text" class="drop-style" v-model.lazy="questionsList[index].answer">
         </div>
       </template>
     </div>
@@ -80,7 +80,7 @@ export default {
   watch: {
     questionsList: {
       handler (questions) {
-        // this.hoverMarkerTips()
+        this.hoverMarkerTips()
         // questions.forEach(item => {
         //   if (item.title) {
         //     console.log('有標提ㄌ')
@@ -261,7 +261,6 @@ export default {
     },
     //* 標記 hover 文字提示
     hoverMarkerTips () {
-      // const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
       const tooltipTriggerList = [...document.querySelectorAll('[data-bs-toggle="tooltip"]')]
       console.log(tooltipTriggerList)
       const arr = tooltipTriggerList.map(function (tooltipTriggerEl) {
