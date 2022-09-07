@@ -95,6 +95,7 @@ export default {
   },
 
   methods: {
+    //* 取得時間軸標記
     getMarker () {
       const progessEl = this.player.elements.progress
 
@@ -127,6 +128,15 @@ export default {
       const markerWarp = document.getElementById('markerWarp')
       if (markerWarp) {
         markerWarp.innerHTML = str
+      }
+    },
+    //* 跳轉到題目標記處
+    goVideoMarkerPosition (e) {
+      const isTimelineBtn = e.target.getAttribute('data-questionTime') !== null
+      //* 如果是題目標記才執行
+      if (isTimelineBtn) {
+        const questionTime = e.target.getAttribute('data-questionTime')
+        this.player.currentTime = parseInt(questionTime) + 0.5
       }
     }
   },
