@@ -4,7 +4,7 @@ export default createStore({
   strict: false, // 嚴謹模式
   state: {
     // 所有在 store 裏的資料
-    questionsList: [],
+    questionsList2: [],
     options: { autoplay: false }
   },
   actions: {
@@ -13,8 +13,8 @@ export default createStore({
   },
   mutations: {
     // 負責改變 state 裏的資料
-    CONGIRM_QUESTIONS (state, params) {
-      state.questionsList = params.questionsList
+    CONFIRM_QUESTIONS (state, params) {
+      state.questionsList2 = params.questionsList
       state.options = params.options
     }
   },

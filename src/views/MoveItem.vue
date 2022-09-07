@@ -76,7 +76,7 @@
     </div>
   <!-- 確認出題按鈕 -->
   <div class="my-3">
-    <button type="button" @click="CONGIRM_QUESTIONS({questionsList:questionsList, options:options})" v-if="questionsList.length>0">確認出題</button>
+    <button type="button" @click="confirmQuestions" v-if="questionsList.length>0">確認出題</button>
   </div>
   </div>
 
@@ -103,6 +103,10 @@ export default {
     }
   },
 
+  computed: {
+    // ...mapState(['questionsList2'])
+  },
+
   watch: {
     questionsList: {
       handler () {
@@ -113,7 +117,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['CONGIRM_QUESTIONS']),
+    ...mapMutations(['CONFIRM_QUESTIONS']),
     sizeBigger (index) {
       this.$refs[`dropItem${index}`][0].style.width = `${this.$refs[`dropItem${index}`][0].offsetWidth + 50}px`
     },
@@ -373,8 +377,10 @@ export default {
       })
       if (arr.length > 0) {
         this.questionsList.forEach((item, index) => {
+          //* 如果有標題
           if (item.title) {
-            arr[index]._config.title = item.title
+            //* 加上第幾題+題目標題
+            arr[index]._config.title = `第${index + 1}題, ${item.title}`
           }
         })
       }
@@ -385,6 +391,12 @@ export default {
       if (this.options.autoplay) {
         this.player.play()
       }
+    },
+    //* 確定出題
+    confirmQuestions () {
+      this.$store.commit('CONFIRM_QUESTIONS', { questionsList: this.questionsList, options: this.options })
+      console.log('題目：', this.questionsList)
+      console.log('配置項目', this.options)
     }
   },
 
