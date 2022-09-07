@@ -138,6 +138,22 @@ export default {
         const questionTime = e.target.getAttribute('data-questionTime')
         this.player.currentTime = parseInt(questionTime) + 0.5
       }
+    },
+    //* '當前時間軸標記變藍色，否則不變色
+    currentMarkStyle () {
+      //* 抵達時間軸上該標記時，標記變為藍色
+      //* 取出所有標記的元素 (前三個會是套件的元件:時間軸外殼、時間軸條、時間tip)
+      const markers = this.player.elements.progress.children[3].children
+      markers.forEach(mark => {
+        const markTime = parseInt(mark.getAttribute('data-questiontime'))
+        //* 如果標記時間 === 當前影片播放的時間，標記變藍色
+        if (markTime === Math.floor(this.videoTime)) {
+          mark.style.backgroundColor = 'blue'
+        } else {
+          //* 如果影片播放時間不是標記時間，則變回紅色
+          mark.style.backgroundColor = 'red'
+        }
+      })
     }
   },
 
@@ -178,7 +194,9 @@ export default {
             // }, 200)
           }
         }
-        // this.currentMarkStyle()
+        setTimeout(() => {
+          this.currentMarkStyle()
+        }, 100)
         // ? 若沒鎖定暫停的話，提交答案後因為影片一樣在設定顯示時間，所以會再度暫停，所以需要將暫停鎖定
         //* 鎖定時間 = 影片當前時間 >= 下一個題目顯示的時間(鎖定到下一個題目前解除)
         //* 如果有下一個需顯示的題目才做解除鎖定時間的計算(解決沒下一題計算時跳出的錯誤)
