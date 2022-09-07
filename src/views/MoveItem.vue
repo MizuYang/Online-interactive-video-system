@@ -67,17 +67,23 @@
           <input type="text" class="drop-style" v-model.lazy="questionsList[index].answer">
 
           <!-- 拖曳按鈕 -->
-          <a href="javascript:;" class="changeSizeBtn top" @mousedown.prevent.stop="changeSize($event,index)"></a>
-          <a href="javascript:;" class="changeSizeBtn left" @mousedown.prevent.stop="changeSize($event,index)"></a>
-          <a href="javascript:;" class="changeSizeBtn right" @mousedown.prevent.stop="changeSize($event,index)"></a>
-          <a href="javascript:;" class="changeSizeBtn bottom" @mousedown.prevent.stop="changeSize($event,index)"></a>
+          <a href="javascript:;" class="changeSizeBtn top" @mousedown.prevent.stop="dragChangeSize($event,index)"></a>
+          <a href="javascript:;" class="changeSizeBtn left" @mousedown.prevent.stop="dragChangeSize($event,index)"></a>
+          <a href="javascript:;" class="changeSizeBtn right" @mousedown.prevent.stop="dragChangeSize($event,index)"></a>
+          <a href="javascript:;" class="changeSizeBtn bottom" @mousedown.prevent.stop="dragChangeSize($event,index)"></a>
         </div>
       </template>
     </div>
+  <!-- 確認出題按鈕 -->
+  <div class="my-3">
+    <button type="button" @click="CONGIRM_QUESTIONS(questionsList)" v-if="questionsList.length>0">確認出題</button>
   </div>
+  </div>
+
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import Tooltip from '../../node_modules/bootstrap/js/src/tooltip.js'
 export default {
   data () {
@@ -107,13 +113,15 @@ export default {
   },
 
   methods: {
+    ...mapMutations(['CONGIRM_QUESTIONS']),
     sizeBigger (index) {
       this.$refs[`dropItem${index}`][0].style.width = `${this.$refs[`dropItem${index}`][0].offsetWidth + 50}px`
     },
     sizeSmaller (index) {
       this.$refs[`dropItem${index}`][0].style.width = `${this.$refs[`dropItem${index}`][0].offsetWidth - 50}px`
     },
-    changeSize (e, index) {
+    //* 拖曳改變元素大小
+    dragChangeSize (e, index) {
       const that = this
       const currentDropItem = this.$refs[`dropItem${index}`][0]
 
