@@ -10,7 +10,7 @@
     <!-- 考試區 -->
     <div class="minSize w-75" @click="goVideoMarkerPosition" ref="dropWrap" v-if="questionsList2.length>0">
       <!-- //* 影片播放器 -->
-      <vue-plyr ref="plyr">
+      <vue-plyr ref="plyr2">
         <video
           :autoplay="options.autoplay==='true'"
           controls
@@ -95,6 +95,40 @@ export default {
   },
 
   methods: {
+    getMarker () {
+      const progessEl = this.player.elements.progress
+
+      let hasmMarkerWarp = null
+      this.player.elements.progress.children.forEach(item => {
+        //* 如果有 markerWarp 就不再重複生成 markerWarp 了
+        if (item.getAttribute('id') === 'markerWarp') {
+          hasmMarkerWarp = true
+        }
+      })
+      //! 如果沒有 markerWarp 才生成 markerWarp
+      if (!hasmMarkerWarp) {
+        //* 生成一個 span 掛在 progess 底下，用來掛載所有標記按鈕
+        const span = document.createElement('span')
+        span.setAttribute('id', 'markerWarp')
+        progessEl.appendChild(span)
+        hasmMarkerWarp = true
+      }
+      let str = ''
+      //* 得到問題顯示時間在影片中的%數位置
+      this.questionsList2.forEach(item => {
+        //* 題目位置 = 題目位置時間 / 影片總時間 *100
+        const questionTime = Math.floor(item.showTime / this.player.duration * 100)
+        str += `
+          <button type="button" class="box" id="markerWarp" style="left:${questionTime}%" data-questionTime="${item.showTime}"
+            data-bs-toggle="tooltip" data-bs-placement="bottom"></button>
+          `
+      })
+      //* 使用 innerHTML 的方式覆蓋，才不會有重複生成的元素
+      const markerWarp = document.getElementById('markerWarp')
+      if (markerWarp) {
+        markerWarp.innerHTML = str
+      }
+    }
   },
 
   mounted () {
@@ -105,10 +139,15 @@ export default {
     const isAutoplay = this.options.autoplay
     this.$refs.autoplayTips.textContent = isAutoplay ? '自動播放' : '手動播放'
 
-    this.player = this.$refs.plyr.player
+    this.player = this.$refs.plyr2.player
 
     //* 將播放器時間改為"增量計數器"而不是倒數計時
     this.player.config.invertTime = false
+
+    //* 取得時間戳記
+    setTimeout(() => {
+      this.getMarker()
+    }, 100)
 
     this.player.on('timeupdate', (event) => {
     //* 取得當前影片播放時間
