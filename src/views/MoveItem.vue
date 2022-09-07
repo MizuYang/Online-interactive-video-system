@@ -40,7 +40,7 @@
       <!-- //* 被拖曳的物件 -->
       <template v-for="(question, index) in questionsList" :key="`questionItem${index}`">
         <div class="drop drop-style bg-info text-center px-3 py-3" @mousedown="dragStart($event,`dropItem${index}`)" :data-question-id="question.id"
-            :ref="`dropItem${index}`" :style="{left:`${question.x||430}px`, top:`${question.y||257}px`}" v-if="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
+            :ref="`dropItem${index}`" :style="{left:`${question.x||430}px`, top:`${question.y||257}px`,width:`${question.width}`, height: `${question.height}`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
             <!-- v-if="Math.floor(videoTime)===Math.floor(question.showTime)" -->
           <div class="d-flex justify-content-between">
             <div class="text-start">
@@ -113,18 +113,12 @@ export default {
     sizeSmaller (index) {
       this.$refs[`dropItem${index}`][0].style.width = `${this.$refs[`dropItem${index}`][0].offsetWidth - 50}px`
     },
-    //! 測試拖曳大小 開始
     changeSize (e, index) {
+      const that = this
       const currentDropItem = this.$refs[`dropItem${index}`][0]
-      console.log(currentDropItem)
-      // //* 滑鼠變拖曳狀
-      // const startX = e.clientX - currentDropItem.offsetLeft
-      // const startY = e.clientY - currentDropItem.offsetTop
 
-      // //* 計算出拖曳物件最左上角座標
-      // const x = e.clientX - startX
-      // let y = e.clientY - startY
-      // console.log('拖曳物件最左邊', x)
+      console.log(currentDropItem)
+
       // //* 一開始先決定邊界範圍
       const area = {
         left: this.dropWrap.offsetLeft,
@@ -132,8 +126,6 @@ export default {
         top: this.dropWrap.offsetTop,
         bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - currentDropItem.offsetHeight
       }
-      // x = Math.max(Math.min(this.x, area.right), area.left)
-      // y = Math.max(Math.min(this.y, area.bottom), area.top)
 
       let dir = '' // 设置好方向
       const firstX = e.clientX // 获取第一次点击的横坐标
@@ -145,9 +137,6 @@ export default {
 
       const Left = currentDropItem.offsetLeft // 获取到距离左边的距离
       const Top = currentDropItem.offsetTop // 获取到距离上边的距离
-
-      // Math.max(Math.min(this.x, area.right), area.left)
-      // Math.max(Math.min(this.y, area.bottom), area.top)
 
       // 下一步判断方向距离左边的距离+元素的宽度减去自己设定的宽度，只要点击的时候大于在这个区间，他就算右边
       if (firstX > Left + width - 10) {
@@ -163,55 +152,52 @@ export default {
       // 判断方向结束
       document.onmousemove = function (e) {
         if (dir === 'left') {
-          if (e.clientX >= area[dir]) {
-            currentDropItem.style.width = width - (e.clientX - firstX) + 'px'
-            currentDropItem.style.left = Left + (e.clientX - firstX) + 'px'
+          if (e.clientX < firstX) {
+            //* 如果沒超過邊界才變更寬度
+            if (e.clientX >= area[dir]) {
+              //* 將寬度、座標傳回資料集
+              that.questionsList[index].width = width - (e.clientX - firstX) + 'px'
+              that.questionsList[index].x = Left + (e.clientX - firstX) + 'px'
+              currentDropItem.style.width = width - (e.clientX - firstX) + 'px'
+              currentDropItem.style.left = Left + (e.clientX - firstX) + 'px'
+            }
           }
         } else if (dir === 'right') {
+          //* 如果沒超過邊界才變更寬度
           if (area[dir] >= Left + (e.clientX - firstX)) {
+            //* 將寬度、座標傳回資料集
+            that.questionsList[index].width = width + (e.clientX - firstX) + 'px'
             currentDropItem.style.width = width + (e.clientX - firstX) + 'px'
           }
         } else if (dir === 'top') {
-          if (e.clientY >= area[dir]) {
-            currentDropItem.style.height = height - (e.clientY - firstY) + 'px'
-            currentDropItem.style.top = Top + (e.clientY - firstY) + 'px'
-          }
-        } else if (dir === 'bottom') {
           console.log('右邊界：', area[dir], '滑鼠當前座標：', e.clientY)
           console.log('右邊', Top)
           console.log(e.clientY - firstY)
           console.log(!e.clientY === area[dir])
+          if (e.clientY < firstY) {
+            //* 如果沒超過邊界才變更寬度
+            if (e.clientY >= area[dir]) {
+              //* 將寬度、座標傳回資料集
+              that.questionsList[index].height = height - (e.clientY - firstY) + 'px'
+              that.questionsList[index].y = Top + (e.clientY - firstY) + 'px'
+              currentDropItem.style.height = height - (e.clientY - firstY) + 'px'
+              currentDropItem.style.top = Top + (e.clientY - firstY) + 'px'
+            }
+          }
+        } else if (dir === 'bottom') {
+          //* 如果沒超過邊界才變更寬度
           if (area[dir] >= Top + (e.clientY - firstY)) {
+            //* 將寬度、座標傳回資料集
+            that.questionsList[index].height = height + (e.clientY - firstY) + 'px'
             currentDropItem.style.height = height + (e.clientY - firstY) + 'px'
           }
         }
       }
+      //* 清除事件
       document.onmouseup = function () {
         document.onmousemove = null
       }
-
-      // const moveChangeSize = (e) => {
-      // console.log(e.clientX)
-      // console.log(currentDropItem.offsetWidth)
-      // currentDropItem.style.width = `${currentDropItem.offsetWidth + x - e.clientX}px`
-      // }
-      //* 拖動時才開始監聽滑鼠移動、滑鼠放開
-      // document.addEventListener('mousemove', this.moveChangeSize)
-      // document.addEventListener('mouseup', () => {
-      //   document.removeEventListener('mousemove', moveChangeSize)
-      // })
     },
-    moveChangeSize (e) {
-      console.log(e.target)
-      console.log('e.clientX', e.clientX)
-      // console.log('e.clientY', e.clientY)
-    },
-    stopChangeSize () {
-      document.removeEventListener('mousemove', this.moveChangeSize)
-      document.removeEventListener('mouseup', this.stopChangeSize)
-    },
-    //! 測試拖曳大小 結束
-
     //* 滑鼠按下:拖動開始
     dragStart (e, dropItemRefName) {
       //* 如果點擊的是控制大小的 a 標籤，則中斷程式碼
