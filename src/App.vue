@@ -1,7 +1,8 @@
 <template>
   <nav>
     <router-link to="/">練習標記</router-link> |
-    <router-link to="/about">練習拖曳</router-link>
+    <router-link to="/about">練習拖曳</router-link> |
+    <router-link to="/qxamStart">考試開始</router-link>
   </nav>
   <router-view />
 </template>

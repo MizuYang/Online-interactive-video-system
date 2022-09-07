@@ -76,7 +76,7 @@
     </div>
   <!-- 確認出題按鈕 -->
   <div class="my-3">
-    <button type="button" @click="CONGIRM_QUESTIONS(questionsList)" v-if="questionsList.length>0">確認出題</button>
+    <button type="button" @click="CONGIRM_QUESTIONS({questionsList:questionsList, options:options})" v-if="questionsList.length>0">確認出題</button>
   </div>
   </div>
 
