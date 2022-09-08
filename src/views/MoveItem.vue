@@ -8,7 +8,7 @@
       <label for="autoplay">自動播放</label>
     </div>
 
-    <div class="w-75" @click="goVideoMarkerPosition" ref="dropWrap">
+    <div class="por w-75" @click="goVideoMarkerPosition" ref="dropWrap">
       <!-- //* 影片播放器 -->
       <vue-plyr ref="plyr">
         <video
@@ -40,7 +40,7 @@
       <!-- //* 被拖曳的物件 -->
       <template v-for="(question, index) in questionsList" :key="`questionItem${index}`">
         <div class="drop drop-style bg-info text-center px-3 py-3" @mousedown="dragStart($event,`dropItem${index}`)" :data-question-id="question.id"
-            :ref="`dropItem${index}`" :style="{left:`${question.x||430}px`, top:`${question.y||257}px`,width:`${question.width}`, height: `${question.height}`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
+            :ref="`dropItem${index}`" :style="{left:`${question.x}px`, top:`${question.y}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
             <!-- v-if="Math.floor(videoTime)===Math.floor(question.showTime)" -->
           <div class="d-flex justify-content-between">
             <div class="text-start">
@@ -93,6 +93,7 @@ export default {
       },
       videoTime: 0,
       vidStopDisabled: false,
+      // vidBorder: {}, //* 影片播放器邊界
       startX: '',
       startY: '',
       x: '',
@@ -119,17 +120,15 @@ export default {
   methods: {
     ...mapMutations(['CONFIRM_QUESTIONS']),
     sizeBigger (index) {
-      this.$refs[`dropItem${index}`][0].style.width = `${this.$refs[`dropItem${index}`][0].offsetWidth + 50}px`
+      this.$refs[`dropItem${index}`][0].style.width = `${this.$refs[`dropItem${index}`][0].offsetWidth + 50}`
     },
     sizeSmaller (index) {
-      this.$refs[`dropItem${index}`][0].style.width = `${this.$refs[`dropItem${index}`][0].offsetWidth - 50}px`
+      this.$refs[`dropItem${index}`][0].style.width = `${this.$refs[`dropItem${index}`][0].offsetWidth - 50}`
     },
     //* 拖曳改變元素大小
     dragChangeSize (e, index) {
       const that = this
       const currentDropItem = this.$refs[`dropItem${index}`][0]
-
-      console.log(currentDropItem)
 
       // //* 一開始先決定邊界範圍
       const area = {
@@ -168,18 +167,18 @@ export default {
             //* 如果沒超過邊界才變更寬度
             if (e.clientX >= area[dir]) {
               //* 將寬度、座標傳回資料集
-              that.questionsList[index].width = width - (e.clientX - firstX) + 'px'
-              that.questionsList[index].x = Left + (e.clientX - firstX) + 'px'
-              currentDropItem.style.width = width - (e.clientX - firstX) + 'px'
-              currentDropItem.style.left = Left + (e.clientX - firstX) + 'px'
+              that.questionsList[index].width = width - (e.clientX - firstX)
+              that.questionsList[index].x = Left + (e.clientX - firstX)
+              currentDropItem.style.width = width - (e.clientX - firstX)
+              currentDropItem.style.left = Left + (e.clientX - firstX)
             }
           }
         } else if (dir === 'right') {
           //* 如果沒超過邊界才變更寬度
           if (area[dir] >= Left + (e.clientX - firstX)) {
             //* 將寬度、座標傳回資料集
-            that.questionsList[index].width = width + (e.clientX - firstX) + 'px'
-            currentDropItem.style.width = width + (e.clientX - firstX) + 'px'
+            that.questionsList[index].width = width + (e.clientX - firstX)
+            currentDropItem.style.width = width + (e.clientX - firstX)
           }
         } else if (dir === 'top') {
           console.log('右邊界：', area[dir], '滑鼠當前座標：', e.clientY)
@@ -190,18 +189,18 @@ export default {
             //* 如果沒超過邊界才變更寬度
             if (e.clientY >= area[dir]) {
               //* 將寬度、座標傳回資料集
-              that.questionsList[index].height = height - (e.clientY - firstY) + 'px'
-              that.questionsList[index].y = Top + (e.clientY - firstY) + 'px'
-              currentDropItem.style.height = height - (e.clientY - firstY) + 'px'
-              currentDropItem.style.top = Top + (e.clientY - firstY) + 'px'
+              that.questionsList[index].height = height - (e.clientY - firstY)
+              that.questionsList[index].y = Top + (e.clientY - firstY)
+              currentDropItem.style.height = height - (e.clientY - firstY)
+              currentDropItem.style.top = Top + (e.clientY - firstY)
             }
           }
         } else if (dir === 'bottom') {
           //* 如果沒超過邊界才變更寬度
           if (area[dir] >= Top + (e.clientY - firstY)) {
             //* 將寬度、座標傳回資料集
-            that.questionsList[index].height = height + (e.clientY - firstY) + 'px'
-            currentDropItem.style.height = height + (e.clientY - firstY) + 'px'
+            that.questionsList[index].height = height + (e.clientY - firstY)
+            currentDropItem.style.height = height + (e.clientY - firstY)
           }
         }
       }
@@ -210,12 +209,23 @@ export default {
         document.onmousemove = null
       }
     },
+    //* 設定影片播放器邊界
+    // setVidBorder () {
+    //   this.vidBorder = {
+    //     left: this.dropWrap.offsetLeft,
+    //     right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - 248,
+    //     // right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - currentDropItem.offsetWidth,
+    //     top: this.dropWrap.offsetTop,
+    //     bottom: this.dropWrap.offsetTop + 234
+    //     // bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - currentDropItem.offsetHeight
+    //   }
+    // },
     //* 滑鼠按下:拖動開始
     dragStart (e, dropItemRefName) {
       //* 如果點擊的是控制大小的 a 標籤，則中斷程式碼
       if (e.target.nodeName === 'A') return
       if (e.target.nodeName === 'BUTTON') return
-
+      console.log('拖動開始')
       this.currentDropItem = this.$refs[dropItemRefName][0]
 
       this.startX = e.clientX - this.currentDropItem.offsetLeft
@@ -239,7 +249,10 @@ export default {
         bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.currentDropItem.offsetHeight
       }
 
+      console.log(this.vidBorder)
       //* 這個要加在move  設定left與top之前
+      // this.x = Math.max(Math.min(this.x, this.vidBorder.right), this.vidBorder.left)
+      // this.y = Math.max(Math.min(this.y, this.vidBorder.bottom), this.vidBorder.top)
       this.x = Math.max(Math.min(this.x, area.right), area.left)
       this.y = Math.max(Math.min(this.y, area.bottom), area.top)
 
@@ -262,8 +275,13 @@ export default {
       this.player.pause()
       this.questionsList.push({
         id: this.randomString(),
-        showTime: this.videoTime
+        showTime: this.videoTime,
+        x: '61',
+        y: '170',
+        width: '248',
+        height: '234'
       })
+
       this.getMarker() //* 生成標記
     },
     //* 權重提高
@@ -403,6 +421,7 @@ export default {
   mounted () {
     this.dropWrap = this.$refs.dropWrap
 
+    // this.setVidBorder()
     //* 取得播放器元素
     this.player = this.$refs.plyr.player
 
@@ -460,8 +479,10 @@ export default {
 <style lang='scss' scope>
 .drop {
   position: absolute;
-  top: 20%;
-  left: 20%;
+  // top: 0%;
+  // left: 0%;
+  // top: 20%;
+  // left: 20%;
   user-select: none;
   // border:4px solid blue;
   min-width: 20%;
@@ -473,6 +494,9 @@ export default {
     opacity: 0.7;
   }
 }
+// .por {
+//   position: relative;
+// }
 
 .box {
   position: absolute;
@@ -485,7 +509,7 @@ export default {
 .box:hover {
   background-color: blue;
 }
-//! 測試拖曳大小 開始
+//* 測試拖曳大小
 .changeSizeBtn {
   position: absolute;
   padding: 3px;
@@ -516,5 +540,4 @@ export default {
   transform: translateX(-50%);
    cursor: n-resize;
 }
-//! 測試拖曳大小 結束
 </style>

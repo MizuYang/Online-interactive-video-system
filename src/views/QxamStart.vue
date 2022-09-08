@@ -8,7 +8,7 @@
     </header>
 
     <!-- 考試區 -->
-    <div class="minSize w-75" @click="goVideoMarkerPosition" ref="dropWrap" v-if="questionsList2.length>0">
+    <div class="minSize w-75" @click="goVideoMarkerPosition" ref="dropWrap" v-show="questionsList2.length>0">
       <!-- //* 影片播放器 -->
       <vue-plyr ref="plyr2">
         <video
@@ -40,14 +40,9 @@
       <!-- //* 被拖曳的物件 -->
       <template v-for="(question, index) in questionsList2" :key="`questionItem${index}`">
         <div class="poa bg-info text-center px-3 py-3" :data-question-id="question.id"
-            :ref="`dropItem${index}`" :style="{left:`${question.x||430}px`, top:`${question.y||257}px`,width:`${question.width}`, height: `${question.height}`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
+            :ref="`dropItem${index}`" :style="{left:`${question.x||430}px`, top:`${parseInt(question.y)-12}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
             <!-- v-if="Math.floor(videoTime)===Math.floor(question.showTime)" -->
-          <div class="d-flex">
             <h3 class="me-auto">第{{ index+1 }}題</h3>
-            <div>
-                <button type="button" class="btn btn-danger btn-sm ms-3 d-inline-block" @click="deleteQuestion(question.id)">X</button>
-            </div>
-          </div>
           <div class="text-start mb-0">
             標題
           </div>
@@ -58,17 +53,11 @@
 
           <p class="text-start mb-0">答案</p>
           <input type="text" v-model.lazy="questionsList2[index].answer">
-
-          <div class="mt-3">
-            <button type="button">
-              核對答案
-            </button>
-          </div>
         </div>
       </template>
     </div>
 
-    <h3 class="text-danger my-5" v-else>
+    <h3 class="text-danger my-5" v-show="questionsList2.length===0">
       目前沒有題目唷，請先到"<router-link to="/about">練習拖曳</router-link>"中出題目~
     </h3>
   </div>
@@ -224,6 +213,9 @@ export default {
 .minSize {
   min-width: 20%;
   min-height: 25%;
+}
+.por {
+  position: relative;
 }
 .poa {
   position: absolute;
