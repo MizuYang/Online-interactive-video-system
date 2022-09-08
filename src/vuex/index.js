@@ -5,7 +5,8 @@ export default createStore({
   state: {
     // 所有在 store 裏的資料
     questionsList2: [],
-    options: { autoplay: false }
+    options: { autoplay: false },
+    plyr: ''
   },
   actions: {
     // 負責觸發 mutations
@@ -16,6 +17,10 @@ export default createStore({
     CONFIRM_QUESTIONS (state, params) {
       state.questionsList2 = params.questionsList
       state.options = params.options
+    },
+    //* 取得 plyr 實體
+    PLAYER_INIT (state, params) {
+      state.plyr = params.player
     }
   },
   getters: {

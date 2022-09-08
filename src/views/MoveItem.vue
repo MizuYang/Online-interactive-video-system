@@ -10,7 +10,8 @@
 
     <div class="por w-75" @click="goVideoMarkerPosition" ref="dropWrap">
       <!-- //* 影片播放器 -->
-      <vue-plyr ref="plyr">
+      <VideoPlyr></VideoPlyr>
+      <!-- <vue-plyr ref="plyr">
         <video
           :autoplay="options.autoplay==='true'"
           controls
@@ -36,7 +37,7 @@
             srclang="en"
           />
         </video>
-      </vue-plyr>
+      </vue-plyr> -->
       <!-- //* 被拖曳的物件 -->
       <template v-for="(question, index) in questionsList" :key="`questionItem${index}`">
         <div class="drop drop-style bg-info text-center px-3 py-3" @mousedown="dragStart($event,`dropItem${index}`)" :data-question-id="question.id"
@@ -85,12 +86,17 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import Tooltip from '../../node_modules/bootstrap/js/src/tooltip.js'
+import VideoPlyr from '../components/plyr/VideoPlyr.vue'
 export default {
+  components: {
+    VideoPlyr
+  },
+
   data () {
     return {
-      options: {
-        autoplay: localStorage.getItem('vid-autoplay') || false
-      },
+      // options: {
+      //   autoplay: localStorage.getItem('vid-autoplay') || false
+      // },
       videoTime: 0,
       vidStopDisabled: false,
       vidBorder: {}, //* 影片播放器邊界
@@ -105,7 +111,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['questionsList2'])
+    ...mapState(['questionsList2', 'plyr', 'options'])
   },
 
   watch: {
@@ -407,7 +413,8 @@ export default {
 
   mounted () {
     //* 取得播放器元素
-    this.player = this.$refs.plyr.player
+    // this.player = this.$refs.plyr.player
+    this.player = this.plyr
     this.dropWrap = this.$refs.dropWrap
 
     if (this.questionsList2.length > 0) {
@@ -415,7 +422,6 @@ export default {
       this.questionsList = this.questionsList2
       this.getMarker()
     }
-
     //* 將播放器時間改為"增量計數器"而不是倒數計時
     this.player.config.invertTime = false
 
