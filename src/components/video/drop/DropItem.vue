@@ -72,6 +72,9 @@ export default {
       //* 如果點擊的是控制大小的 a 標籤，則中斷程式碼
       if (e.target.nodeName === 'A') return
       if (e.target.nodeName === 'BUTTON') return
+      //* 如果不是 about 頁面就中斷(學生拖曳無效)
+      if (!this.isAboutPage) return
+
       this.currentDropItem = this.$refs[dropItemRefName][0]
 
       this.startX = e.clientX - this.currentDropItem.offsetLeft
