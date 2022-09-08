@@ -52,7 +52,7 @@
 <script>
 import { mapState } from 'vuex'
 import Tooltip from 'bootstrap/js/src/tooltip'
-import VideoPlyr from '../components/video/plyr/VideoPlyr.vue'
+import VideoPlyr from '../components/video/plyr/PlyrVideo.vue'
 import DropItem from '../components/video/drop/DropItem.vue'
 export default {
   components: {

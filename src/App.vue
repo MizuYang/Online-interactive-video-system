@@ -2,7 +2,8 @@
   <nav>
     <router-link to="/">練習標記</router-link> |
     <router-link to="/about">練習拖曳</router-link> |
-    <router-link to="/examStart">考試開始</router-link>
+    <router-link to="/examStart">考試開始</router-link> |
+    <router-link to="/youtubeVideo">Youtube 影片</router-link>
   </nav>
   <router-view />
 </template>
@@ -67,4 +68,4 @@ questionList: [
 //! 優化影片暫停、題目顯示邏輯
 //! 整理多餘程式碼
 
-//! 使用 Youtube 影片看看
+//! 使用 Youtube 影片看看(直接用模組化的方式)

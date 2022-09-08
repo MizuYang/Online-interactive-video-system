@@ -40,7 +40,6 @@
       </vue-plyr> -->
       <!-- //* 被拖曳的物件 -->
       <DropItem :dropWrap="dropWrap" :videoTime="videoTime"></DropItem>
-      <!-- //! 壞掉的話那段丟這裡 -->
     </div>
   <!-- 確認出題按鈕 -->
   <div class="my-3">
@@ -53,7 +52,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import Tooltip from '../../node_modules/bootstrap/js/src/tooltip.js'
-import VideoPlyr from '../components/video/plyr/VideoPlyr.vue'
+import VideoPlyr from '../components/video/plyr/PlyrVideo.vue'
 // import DropBtn from '../components/video/drop/DropBtn.vue'
 import DropItem from '../components/video/drop/DropItem.vue'
 export default {
