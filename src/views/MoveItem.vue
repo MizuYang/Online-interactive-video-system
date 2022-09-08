@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import Tooltip from '../../node_modules/bootstrap/js/src/tooltip.js'
 export default {
   data () {
@@ -93,7 +93,6 @@ export default {
       },
       videoTime: 0,
       vidStopDisabled: false,
-      // vidBorder: {}, //* 影片播放器邊界
       startX: '',
       startY: '',
       x: '',
@@ -105,7 +104,7 @@ export default {
   },
 
   computed: {
-    // ...mapState(['questionsList2'])
+    ...mapState(['questionsList2'])
   },
 
   watch: {
@@ -130,7 +129,7 @@ export default {
       const that = this
       const currentDropItem = this.$refs[`dropItem${index}`][0]
 
-      // //* 一開始先決定邊界範圍
+      //* 一開始先決定邊界範圍
       const area = {
         left: this.dropWrap.offsetLeft,
         right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - currentDropItem.offsetWidth,
@@ -209,17 +208,6 @@ export default {
         document.onmousemove = null
       }
     },
-    //* 設定影片播放器邊界
-    // setVidBorder () {
-    //   this.vidBorder = {
-    //     left: this.dropWrap.offsetLeft,
-    //     right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - 248,
-    //     // right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - currentDropItem.offsetWidth,
-    //     top: this.dropWrap.offsetTop,
-    //     bottom: this.dropWrap.offsetTop + 234
-    //     // bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - currentDropItem.offsetHeight
-    //   }
-    // },
     //* 滑鼠按下:拖動開始
     dragStart (e, dropItemRefName) {
       //* 如果點擊的是控制大小的 a 標籤，則中斷程式碼
@@ -248,10 +236,7 @@ export default {
         bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.currentDropItem.offsetHeight
       }
 
-      console.log(this.vidBorder)
       //* 這個要加在move  設定left與top之前
-      // this.x = Math.max(Math.min(this.x, this.vidBorder.right), this.vidBorder.left)
-      // this.y = Math.max(Math.min(this.y, this.vidBorder.bottom), this.vidBorder.top)
       this.x = Math.max(Math.min(this.x, area.right), area.left)
       this.y = Math.max(Math.min(this.y, area.bottom), area.top)
 
@@ -324,42 +309,30 @@ export default {
       })
       //! 如果沒有 markerWarp 才生成 markerWarp
       if (!hasmMarkerWarp) {
-        //* 生成一個 span 掛在 progess 底下，用來掛載所有標記按鈕
+        //* 生成一個 span(markerWarp) 掛在 progess 底下，用來掛載所有標記按鈕
         const span = document.createElement('span')
         span.setAttribute('id', 'markerWarp')
         progessEl.appendChild(span)
         hasmMarkerWarp = true
       }
-      // setTimeout(() => {
-      let str = ''
-      //* 得到問題顯示時間在影片中的%數位置
-      this.questionsList.forEach(item => {
+      setTimeout(() => {
+        let str = ''
+        //* 得到問題顯示時間在影片中的%數位置
+        this.questionsList.forEach(item => {
         //* 題目位置 = 題目位置時間 / 影片總時間 *100
-        const questionTime = Math.floor(item.showTime / this.player.duration * 100)
-        //* 生成題目位置標記
-        // const btn = document.createElement('button')
-
-        // btn.classList.add('box')
-        // btn.setAttribute('type', 'button')
-        // btn.setAttribute('style', `left:${questionTime}%`)
-        // btn.setAttribute('data-questionTime', item.showTime)
-        // // btn.setAttribute('title', item.title)
-        // //* BS5 提示視窗元件
-        // // btn.setAttribute('title', item.title)
-        // btn.setAttribute('data-bs-toggle', 'tooltip')
-        // btn.setAttribute('data-bs-placement', 'bottom')
-        // progessEl.appendChild(btn)
-        str += `
+          const questionTime = Math.floor(parseInt(item.showTime) / parseInt(this.player.duration) * 100)
+          //* 生成標記
+          str += `
           <button type="button" class="box" id="markerWarp" style="left:${questionTime}%" data-questionTime="${item.showTime}"
             data-bs-toggle="tooltip" data-bs-placement="bottom"></button>
           `
-      })
-      //* 使用 innerHTML 的方式覆蓋，才不會有重複生成的元素
-      const markerWarp = document.getElementById('markerWarp')
-      if (markerWarp) {
-        markerWarp.innerHTML = str
-      }
-      // }, 500)
+        })
+        //* 使用 innerHTML 的方式覆蓋，才不會有重複生成的元素
+        const markerWarp = document.getElementById('markerWarp')
+        if (markerWarp) {
+          markerWarp.innerHTML = str
+        }
+      }, 100)
     },
     //* 跳轉到題目標記處
     goVideoMarkerPosition (e) {
@@ -418,11 +391,14 @@ export default {
   },
 
   mounted () {
-    this.dropWrap = this.$refs.dropWrap
-
-    // this.setVidBorder()
     //* 取得播放器元素
     this.player = this.$refs.plyr.player
+
+    if (this.questionsList2.length > 0) {
+      this.questionsList = this.questionsList2
+      this.getMarker()
+    }
+    this.dropWrap = this.$refs.dropWrap
 
     //* 將播放器時間改為"增量計數器"而不是倒數計時
     this.player.config.invertTime = false
@@ -465,13 +441,6 @@ export default {
         }
       })
     })
-
-    // const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    // console.log(tooltipTriggerList)
-    // const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-    //   return new Tooltip(tooltipTriggerEl)
-    // })
-    // console.log(tooltipList)
   }
 }
 </script>

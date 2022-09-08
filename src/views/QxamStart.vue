@@ -40,7 +40,7 @@
       <!-- //* 被拖曳的物件 -->
       <template v-for="(question, index) in questionsList2" :key="`questionItem${index}`">
         <div class="poa bg-info text-center px-3 py-3" :data-question-id="question.id"
-            :ref="`dropItem${index}`" :style="{left:`${question.x||430}px`, top:`${parseInt(question.y)-12}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
+            :ref="`dropItem${index}`" :style="{left:`${question.x||430}px`, top:`${question.y-12}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
             <!-- v-if="Math.floor(videoTime)===Math.floor(question.showTime)" -->
             <h3 class="me-auto">第{{ index+1 }}題</h3>
           <div class="text-start mb-0">
@@ -151,11 +151,9 @@ export default {
     //* 標記 hover 文字提示
     hoverMarkerTips () {
       const tooltipTriggerList = [...document.querySelectorAll('[data-bs-toggle="tooltip"]')]
-      console.log('tooltipTriggerList', tooltipTriggerList)
       const arr = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new Tooltip(tooltipTriggerEl)
       })
-      console.log('arr', arr)
       if (arr.length > 0) {
         this.questionsList2.forEach((item, index) => {
           //* 如果有標題
