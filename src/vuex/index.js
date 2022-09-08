@@ -13,9 +13,12 @@ export default createStore({
     // 可處理非同步程式（e.g: 打 API）
   },
   mutations: {
-    // 負責改變 state 裏的資料
-    CONFIRM_QUESTIONS (state, params) {
+    //* 儲存題目到 store
+    SAVE_QUESTIONS_LIST (state, params) {
       state.questionsList2 = params.questionsList
+    },
+    //* 儲存選項
+    SAVE_OPTIONS (state, params) {
       state.options = params.options
     },
     //* 取得 plyr 實體

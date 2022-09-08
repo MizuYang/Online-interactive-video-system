@@ -67,7 +67,7 @@
 <script>
 import { mapState } from 'vuex'
 import Tooltip from '../../node_modules/bootstrap/js/src/tooltip.js'
-import VideoPlyr from '../components/plyr/VideoPlyr.vue'
+import VideoPlyr from '../components/video/plyr/VideoPlyr.vue'
 export default {
   components: {
     VideoPlyr

@@ -9,19 +9,19 @@
     >
       <source
         size="720"
-        src="../../assets/video/有聲影片測試.mp4"
+        src="../../../assets/video/有聲影片測試.mp4"
         type="video/mp4"
       />
       <source
         size="1080"
-        src="../../assets/video/有聲影片測試.mp4"
+        src="../../../assets/video/有聲影片測試.mp4"
         type="video/mp4"
       />
       <track
         default
         kind="captions"
         label="English captions"
-        src="../../assets/video/有聲影片測試.mp4"
+        src="../../../assets/video/有聲影片測試.mp4"
         srclang="en"
       />
     </video>
