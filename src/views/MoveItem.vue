@@ -39,42 +39,8 @@
         </video>
       </vue-plyr> -->
       <!-- //* 被拖曳的物件 -->
-      <template v-for="(question, index) in questionsList" :key="`questionItem${index}`">
-        <div class="drop drop-style bg-info text-center px-3 py-3" @mousedown="dragStart($event,`dropItem${index}`)" :data-question-id="question.id"
-            :ref="`dropItem${index}`" :style="{left:`${question.x}px`, top:`${question.y}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
-            <!-- v-if="Math.floor(videoTime)===Math.floor(question.showTime)" -->
-          <div class="d-flex justify-content-between">
-            <div class="text-start">
-              <button type="button" class="btn btn-secondary btn-sm p-1" @click="sizeSmaller(index)">小</button>
-              <button type="button" class="btn btn-secondary btn-sm mx-1 p-1" @click="sizeBigger(index)">大</button>
-            </div>
-            <h3 class="text-center">第{{ index+1 }}題</h3>
-            <div>
-                <button type="button" class="btn btn-danger btn-sm ms-3 d-inline-block" @click="deleteQuestion(question.id)">X</button>
-            </div>
-          </div>
-          <div class="text-start mb-0">
-            標題
-            <button type="button" @click="loseIndex(index)" :disabled="!questionsList[index].zIndex||questionsList[index].zIndex<=0">－</button>
-            <button type="button" @click="addIndex(index)">＋</button>
-            權重：<span :ref="`zIndexNum${index}`">0</span>
-          </div>
-          <input type="text" class="drop-style" v-model.lazy="questionsList[index].title">
-
-          <p class="text-start mb-0">內容</p>
-          <input type="text" class="drop-style" v-model.lazy="questionsList[index].content">
-
-          <p class="text-start mb-0">答案</p>
-          <input type="text" class="drop-style" v-model.lazy="questionsList[index].answer">
-
-          <!-- 拖曳按鈕 -->
-          <DropBtn :dropWrap="dropWrap" :index="index"></DropBtn>
-          <!-- <a href="javascript:;" class="changeSizeBtn top" @mousedown.prevent.stop="dragChangeSize($event,index)"></a>
-          <a href="javascript:;" class="changeSizeBtn left" @mousedown.prevent.stop="dragChangeSize($event,index)"></a>
-          <a href="javascript:;" class="changeSizeBtn right" @mousedown.prevent.stop="dragChangeSize($event,index)"></a>
-          <a href="javascript:;" class="changeSizeBtn bottom" @mousedown.prevent.stop="dragChangeSize($event,index)"></a> -->
-        </div>
-      </template>
+      <DropItem :dropWrap="dropWrap" :videoTime="videoTime"></DropItem>
+      <!-- //! 壞掉的話那段丟這裡 -->
     </div>
   <!-- 確認出題按鈕 -->
   <div class="my-3">
@@ -88,11 +54,13 @@
 import { mapState, mapMutations } from 'vuex'
 import Tooltip from '../../node_modules/bootstrap/js/src/tooltip.js'
 import VideoPlyr from '../components/video/plyr/VideoPlyr.vue'
-import DropBtn from '../components/video/drop/DropBtn.vue'
+// import DropBtn from '../components/video/drop/DropBtn.vue'
+import DropItem from '../components/video/drop/DropItem.vue'
 export default {
   components: {
     VideoPlyr,
-    DropBtn
+    // DropBtn,
+    DropItem
   },
 
   data () {
@@ -128,13 +96,7 @@ export default {
 
   methods: {
     ...mapMutations(['SAVE_QUESTIONS_LIST', 'SAVE_OPTIONS']),
-    sizeBigger (index) {
-      this.$refs[`dropItem${index}`][0].style.width = `${this.$refs[`dropItem${index}`][0].offsetWidth + 50}`
-    },
-    sizeSmaller (index) {
-      this.$refs[`dropItem${index}`][0].style.width = `${this.$refs[`dropItem${index}`][0].offsetWidth - 50}`
-    },
-    //* 設定拖曳外圍邊界
+    //!  設定拖曳外圍邊界 若沒用到就刪掉
     getVidBorder () {
       // this.questionsList[0].
       // this.vidBorder = {
@@ -230,57 +192,57 @@ export default {
     //     document.onmousemove = null
     //   }
     // },
-    //* 滑鼠按下:拖動開始
-    dragStart (e, dropItemRefName) {
-      //* 如果點擊的是控制大小的 a 標籤，則中斷程式碼
-      if (e.target.nodeName === 'A') return
-      if (e.target.nodeName === 'BUTTON') return
-      this.currentDropItem = this.$refs[dropItemRefName][0]
+    // //* 滑鼠按下:拖動開始
+    // dragStart (e, dropItemRefName) {
+    //   //* 如果點擊的是控制大小的 a 標籤，則中斷程式碼
+    //   if (e.target.nodeName === 'A') return
+    //   if (e.target.nodeName === 'BUTTON') return
+    //   this.currentDropItem = this.$refs[dropItemRefName][0]
 
-      this.startX = e.clientX - this.currentDropItem.offsetLeft
-      this.startY = e.clientY - this.currentDropItem.offsetTop
+    //   this.startX = e.clientX - this.currentDropItem.offsetLeft
+    //   this.startY = e.clientY - this.currentDropItem.offsetTop
 
-      //* 拖動時才開始監聽滑鼠移動、滑鼠放開
-      document.addEventListener('mousemove', this.move)
-      document.addEventListener('mouseup', this.stop)
-    },
-    //* 滑鼠移動:移動座標
-    move (e) {
-      //* 計算出拖曳物件最左上角座標
-      this.x = e.clientX - this.startX
-      this.y = e.clientY - this.startY
+    //   //* 拖動時才開始監聽滑鼠移動、滑鼠放開
+    //   document.addEventListener('mousemove', this.move)
+    //   document.addEventListener('mouseup', this.stop)
+    // },
+    // //* 滑鼠移動:移動座標
+    // move (e) {
+    //   //* 計算出拖曳物件最左上角座標
+    //   this.x = e.clientX - this.startX
+    //   this.y = e.clientY - this.startY
 
-      //* 一開始先決定邊界範圍
-      const area = {
-        left: this.dropWrap.offsetLeft,
-        right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - this.currentDropItem.offsetWidth,
-        top: this.dropWrap.offsetTop,
-        bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.currentDropItem.offsetHeight
-      }
+    //   //* 一開始先決定邊界範圍
+    //   const area = {
+    //     left: this.dropWrap.offsetLeft,
+    //     right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - this.currentDropItem.offsetWidth,
+    //     top: this.dropWrap.offsetTop,
+    //     bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.currentDropItem.offsetHeight
+    //   }
 
-      // console.log(area)
+    //   // console.log(area)
 
-      //* 這個要加在move  設定left與top之前
-      this.x = Math.max(Math.min(this.x, area.right), area.left)
-      this.y = Math.max(Math.min(this.y, area.bottom), area.top)
+    //   //* 這個要加在move  設定left與top之前
+    //   this.x = Math.max(Math.min(this.x, area.right), area.left)
+    //   this.y = Math.max(Math.min(this.y, area.bottom), area.top)
 
-      //* 取得當前移動題目窗 ID 並將當前 x,y 軸賦予到題目集裡
-      const id = this.currentDropItem.getAttribute('data-question-id')
-      const itemIndex = this.questionsList.findIndex(item => {
-        return item.id === id
-      })
-      //* 變更拖曳位置
-      this.questionsList[itemIndex].x = `${this.x}`
-      this.questionsList[itemIndex].y = `${this.y}`
+    //   //* 取得當前移動題目窗 ID 並將當前 x,y 軸賦予到題目集裡
+    //   const id = this.currentDropItem.getAttribute('data-question-id')
+    //   const itemIndex = this.questionsList.findIndex(item => {
+    //     return item.id === id
+    //   })
+    //   //* 變更拖曳位置
+    //   this.questionsList[itemIndex].x = `${this.x}`
+    //   this.questionsList[itemIndex].y = `${this.y}`
 
-      //* 把資料傳回 store
-      this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
-    },
-    //* 滑鼠放開:拖動結束
-    stop () {
-      document.removeEventListener('mousemove', this.move)
-      document.removeEventListener('mouseup', this.stop)
-    },
+    //   //* 把資料傳回 store
+    //   this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
+    // },
+    // //* 滑鼠放開:拖動結束
+    // stop () {
+    //   document.removeEventListener('mousemove', this.move)
+    //   document.removeEventListener('mouseup', this.stop)
+    // },
     //* 新增考題
     addQuestions () {
       this.player.pause()
@@ -298,36 +260,36 @@ export default {
       //* 把資料傳回 store
       this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
     },
-    //* 權重提高
-    addIndex (index) {
-      this.$refs[`dropItem${index}`][0].style.zIndex++
-      this.$refs[`zIndexNum${index}`][0].textContent = this.$refs[`dropItem${index}`][0].style.zIndex
-      this.questionsList[index].zIndex = this.$refs[`dropItem${index}`][0].style.zIndex
+    // //* 權重提高
+    // addIndex (index) {
+    //   this.$refs[`dropItem${index}`][0].style.zIndex++
+    //   this.$refs[`zIndexNum${index}`][0].textContent = this.$refs[`dropItem${index}`][0].style.zIndex
+    //   this.questionsList[index].zIndex = this.$refs[`dropItem${index}`][0].style.zIndex
 
-      //* 把資料傳回 store
-      this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
-    },
-    //* 權重降低
-    loseIndex (index) {
-      this.$refs[`dropItem${index}`][0].style.zIndex--
-      this.$refs[`zIndexNum${index}`][0].textContent = this.$refs[`dropItem${index}`][0].style.zIndex
-      this.questionsList[index].zIndex = this.$refs[`dropItem${index}`][0].style.zIndex
+    //   //* 把資料傳回 store
+    //   this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
+    // },
+    // //* 權重降低
+    // loseIndex (index) {
+    //   this.$refs[`dropItem${index}`][0].style.zIndex--
+    //   this.$refs[`zIndexNum${index}`][0].textContent = this.$refs[`dropItem${index}`][0].style.zIndex
+    //   this.questionsList[index].zIndex = this.$refs[`dropItem${index}`][0].style.zIndex
 
-      //* 把資料傳回 store
-      this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
-    },
-    //* 刪除題目
-    deleteQuestion (id) {
-      //* 取得要刪除的項目位置
-      const deleteIndex = this.questionsList.findIndex(item => {
-        return item.id === id
-      })
-      this.questionsList.splice(deleteIndex, 1)
-      this.getMarker()
+    //   //* 把資料傳回 store
+    //   this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
+    // },
+    // //* 刪除題目
+    // deleteQuestion (id) {
+    //   //* 取得要刪除的項目位置
+    //   const deleteIndex = this.questionsList.findIndex(item => {
+    //     return item.id === id
+    //   })
+    //   this.questionsList.splice(deleteIndex, 1)
+    //   this.getMarker()
 
-      //* 把資料傳回 store
-      this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
-    },
+    //   //* 把資料傳回 store
+    //   this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
+    // },
     //* 隨機生成 ID
     randomString () {
       const num = 10

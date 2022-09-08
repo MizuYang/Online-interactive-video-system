@@ -39,23 +39,8 @@
         </video>
       </vue-plyr> -->
       <!-- //* 被拖曳的物件 -->
-      <template v-for="(question, index) in questionsList2" :key="`questionItem${index}`">
-        <div class="poa bg-info text-center px-3 py-3" :data-question-id="question.id"
-            :ref="`dropItem${index}`" :style="{left:`${question.x||430}px`, top:`${question.y-12}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
-            <!-- v-if="Math.floor(videoTime)===Math.floor(question.showTime)" -->
-            <h3 class="me-auto">第{{ index+1 }}題</h3>
-          <div class="text-start mb-0">
-            標題
-          </div>
-          <input type="text" v-model.lazy="questionsList2[index].title">
+      <DropItem :videoTime="videoTime"></DropItem>
 
-          <p class="text-start mb-0">內容</p>
-          <input type="text" v-model.lazy="questionsList2[index].content">
-
-          <p class="text-start mb-0">答案</p>
-          <input type="text" v-model.lazy="questionsList2[index].answer">
-        </div>
-      </template>
     </div>
 
     <h3 class="text-danger my-5" v-show="questionsList2.length===0">
@@ -66,11 +51,13 @@
 
 <script>
 import { mapState } from 'vuex'
-import Tooltip from '../../node_modules/bootstrap/js/src/tooltip.js'
+import Tooltip from 'bootstrap/js/src/tooltip'
 import VideoPlyr from '../components/video/plyr/VideoPlyr.vue'
+import DropItem from '../components/video/drop/DropItem.vue'
 export default {
   components: {
-    VideoPlyr
+    VideoPlyr,
+    DropItem
   },
 
   data () {
@@ -244,4 +231,22 @@ export default {
 .poa {
   position: absolute;
 }
+
+      // <template v-for="(question, index) in questionsList2" :key="`questionItem${index}`">
+      //   <div class="poa bg-info text-center px-3 py-3" :data-question-id="question.id"
+      //       :ref="`dropItem${index}`" :style="{left:`${question.x||430}px`, top:`${question.y-12}px`,width:`${question.width}px`, height: `${question.height}px`, zIndex: parseInt(question.zIndex)}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
+      //       <!-- v-if="Math.floor(videoTime)===Math.floor(question.showTime)" -->
+      //       <h3 class="me-auto">第{{ index+1 }}題</h3>
+      //     <div class="text-start mb-0">
+      //       標題
+      //     </div>
+      //     <input type="text" v-model.lazy="questionsList2[index].title">
+
+      //     <p class="text-start mb-0">內容</p>
+      //     <input type="text" v-model.lazy="questionsList2[index].content">
+
+      //     <p class="text-start mb-0">答案</p>
+      //     <input type="text" v-model.lazy="questionsList2[index].answer">
+      //   </div>
+      // </template>
 </style>

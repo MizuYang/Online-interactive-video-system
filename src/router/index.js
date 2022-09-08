@@ -12,9 +12,9 @@ const routes = [
     component: () => import('../views/MoveItem.vue')
   },
   {
-    path: '/qxamStart',
-    name: 'qxamStart',
-    component: () => import('../views/QxamStart.vue')
+    path: '/examStart',
+    name: 'examStart',
+    component: () => import('../views/ExamStart.vue')
   }
   // { //* 代表所有主頁面下的頁面，路由錯誤都會被導向
   //   path: '/:pathMatch(.*)*',

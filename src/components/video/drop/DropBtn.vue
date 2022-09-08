@@ -107,9 +107,9 @@ export default {
             currentDropItem.style.height = height + (e.clientY - firstY)
           }
         }
-        //* 把資料傳回 store
-        that.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
       }
+      //* 把資料傳回 store
+      this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
 
       //* 清除事件
       document.onmouseup = function () {

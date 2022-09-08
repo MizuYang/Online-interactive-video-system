@@ -2,7 +2,7 @@
   <nav>
     <router-link to="/">練習標記</router-link> |
     <router-link to="/about">練習拖曳</router-link> |
-    <router-link to="/qxamStart">考試開始</router-link>
+    <router-link to="/examStart">考試開始</router-link>
   </nav>
   <router-view />
 </template>
@@ -58,7 +58,13 @@ questionList: [
 //* 老師出題也可以從 store 取得先前題目做呈現 v
 
 //! 老師 store 取得以往題目，外層限制異常
-//! 將影片套件製作成元件複用
+//* 元件模組化複用： v
+  // 影片套件、拖曳按鈕、拖曳區塊
 //! 將可複用性的函式用 ESM 模組化後複用
+  // getMarker
 //! 測試建立三個題目，從最後題目跳轉到第一題是否能自動暫停
 //! 優化影片暫停、題目顯示邏輯
+
+//! 如果是 examStart 頁面，就移除拖動事件
+
+//! 使用 Youtube 影片看看
