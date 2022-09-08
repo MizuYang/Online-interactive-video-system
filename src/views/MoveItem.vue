@@ -225,7 +225,6 @@ export default {
       //* 如果點擊的是控制大小的 a 標籤，則中斷程式碼
       if (e.target.nodeName === 'A') return
       if (e.target.nodeName === 'BUTTON') return
-      console.log('拖動開始')
       this.currentDropItem = this.$refs[dropItemRefName][0]
 
       this.startX = e.clientX - this.currentDropItem.offsetLeft

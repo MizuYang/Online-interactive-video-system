@@ -64,6 +64,7 @@
 </template>
 
 <script>
+import Tooltip from '../../node_modules/bootstrap/js/src/tooltip.js'
 import { mapState } from 'vuex'
 export default {
   components: {
@@ -118,6 +119,9 @@ export default {
       if (markerWarp) {
         markerWarp.innerHTML = str
       }
+
+      //* 取得標記 hover 文字提示
+      this.hoverMarkerTips()
     },
     //* 跳轉到題目標記處
     goVideoMarkerPosition (e) {
@@ -143,6 +147,24 @@ export default {
           mark.style.backgroundColor = 'red'
         }
       })
+    },
+    //* 標記 hover 文字提示
+    hoverMarkerTips () {
+      const tooltipTriggerList = [...document.querySelectorAll('[data-bs-toggle="tooltip"]')]
+      console.log('tooltipTriggerList', tooltipTriggerList)
+      const arr = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new Tooltip(tooltipTriggerEl)
+      })
+      console.log('arr', arr)
+      if (arr.length > 0) {
+        this.questionsList2.forEach((item, index) => {
+          //* 如果有標題
+          if (item.title) {
+            //* 加上第幾題+題目標題
+            arr[index]._config.title = `第${index + 1}題, ${item.title}`
+          }
+        })
+      }
     }
   },
 
