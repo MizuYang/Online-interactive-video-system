@@ -110,7 +110,7 @@ export default {
         //* 題目位置 = 題目位置時間 / 影片總時間 *100
         const questionTime = Math.floor(item.showTime / this.player.duration * 100)
         str += `
-          <button type="button" class="box" id="markerWarp" style="left:${questionTime}%" data-questionTime="${item.showTime}"
+          <button type="button" class="marker" id="markerWarp" style="left:${questionTime}%" data-questionTime="${item.showTime}"
             data-bs-toggle="tooltip" data-bs-placement="bottom"></button>
           `
       })

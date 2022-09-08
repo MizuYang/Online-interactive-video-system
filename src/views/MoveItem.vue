@@ -93,6 +93,7 @@ export default {
       },
       videoTime: 0,
       vidStopDisabled: false,
+      vidBorder: {}, //* 影片播放器邊界
       startX: '',
       startY: '',
       x: '',
@@ -124,6 +125,16 @@ export default {
     sizeSmaller (index) {
       this.$refs[`dropItem${index}`][0].style.width = `${this.$refs[`dropItem${index}`][0].offsetWidth - 50}`
     },
+    //* 設定拖曳外圍邊界
+    getVidBorder () {
+      // this.questionsList[0].
+      // this.vidBorder = {
+      //   left: this.dropWrap.offsetLeft,
+      //   right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - this.currentDropItem.offsetWidth,
+      //   top: this.dropWrap.offsetTop,
+      //   bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.currentDropItem.offsetHeight
+      // }
+    },
     //* 拖曳改變元素大小
     dragChangeSize (e, index) {
       const that = this
@@ -136,6 +147,8 @@ export default {
         top: this.dropWrap.offsetTop,
         bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - currentDropItem.offsetHeight
       }
+
+      console.log(area)
 
       let dir = '' // 设置好方向
       const firstX = e.clientX // 获取第一次点击的横坐标
@@ -236,6 +249,8 @@ export default {
         bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.currentDropItem.offsetHeight
       }
 
+      console.log(area)
+
       //* 這個要加在move  設定left與top之前
       this.x = Math.max(Math.min(this.x, area.right), area.left)
       this.y = Math.max(Math.min(this.y, area.bottom), area.top)
@@ -323,7 +338,7 @@ export default {
           const questionTime = Math.floor(parseInt(item.showTime) / parseInt(this.player.duration) * 100)
           //* 生成標記
           str += `
-          <button type="button" class="box" id="markerWarp" style="left:${questionTime}%" data-questionTime="${item.showTime}"
+          <button type="button" class="marker" id="markerWarp" style="left:${questionTime}%" data-questionTime="${item.showTime}"
             data-bs-toggle="tooltip" data-bs-placement="bottom"></button>
           `
         })
@@ -393,12 +408,13 @@ export default {
   mounted () {
     //* 取得播放器元素
     this.player = this.$refs.plyr.player
+    this.dropWrap = this.$refs.dropWrap
 
     if (this.questionsList2.length > 0) {
+      this.getVidBorder()
       this.questionsList = this.questionsList2
       this.getMarker()
     }
-    this.dropWrap = this.$refs.dropWrap
 
     //* 將播放器時間改為"增量計數器"而不是倒數計時
     this.player.config.invertTime = false
@@ -466,7 +482,7 @@ export default {
 //   position: relative;
 // }
 
-.box {
+.marker {
   position: absolute;
   top: 0%;
   left: 0;
@@ -474,7 +490,7 @@ export default {
   padding: 8px 2px;
   background-color: red;
 }
-.box:hover {
+.marker:hover {
   background-color: blue;
 }
 //* 測試拖曳大小
