@@ -8,7 +8,7 @@
     </header>
 
     <!-- 考試區 -->
-    <div class="minSize w-75" @click="goVideoMarkerPosition" ref="dropWrap" v-show="questionsList2.length>0">
+    <div class="por minSize w-75" @click="goVideoMarkerPosition" ref="dropWrap" v-show="questionsList2.length>0">
       <!-- //* 影片播放器 -->
       <VideoPlyr></VideoPlyr>
       <!-- <vue-plyr ref="plyr2">
@@ -44,7 +44,7 @@
     </div>
 
     <h3 class="text-danger my-5" v-show="questionsList2.length===0">
-      目前沒有題目唷，請先到"<router-link to="/about">練習拖曳</router-link>"中出題目~
+      目前沒有題目唷，請先到"<router-link to="/moveItem">練習拖曳</router-link>"中出題目~
     </h3>
   </div>
 </template>

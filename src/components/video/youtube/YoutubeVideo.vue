@@ -1,11 +1,13 @@
 <template>
-  <div class="w-75">
+  <div class="por w-75" ref="dropWrap">
     <!-- Youtube 影片播放器 -->
     <div class="plyr__video-embed" id="player">
       <iframe src="https://www.youtube.com/watch?v=LFaKMm0Gulw"
               allowfullscreen allowtransparency allow="autoplay">
       </iframe>
     </div>
+    <!-- 題目 -->
+    <DropItem :dropWrap="dropWrap" :videoTime="videoTime"></DropItem>
   </div>
 </template>
 
@@ -13,13 +15,17 @@
 import Plyr from '../../../../node_modules/plyr'
 import { mapState } from 'vuex'
 
+import DropItem from '../drop/DropItem.vue'
 export default {
   components: {
+    DropItem
   },
 
   data () {
     return {
-      player: ''
+      player: '',
+      videoTime: 0,
+      dropWrap: ''
     }
   },
 
@@ -27,13 +33,12 @@ export default {
     ...mapState(['questionsList2'])
   },
 
-  watch: {
-  },
-
   methods: {
   },
 
   mounted () {
+    //* 取得播放器外圍
+    this.dropWrap = this.$refs.dropWrap
     this.player = new Plyr('#player', {
       // noCookie: false,
       // rel: 0,
@@ -80,11 +85,15 @@ export default {
     console.log(this.questionsList2)
 
     this.player.on('timeupdate', (event) => {
-      console.log(this.player.currentTime)
+      //* 取得當前影片播放時間
+      this.videoTime = this.player.currentTime
     })
   }
 }
 </script>
 
 <style lang='scss' scope>
+.por {
+  position: relative;
+}
 </style>

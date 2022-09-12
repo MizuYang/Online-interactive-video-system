@@ -8,38 +8,13 @@
       <label for="autoplay">自動播放</label>
     </div>
 
-    <div class="por w-75" @click="goVideoMarkerPosition" ref="dropWrap">
-      <!-- //* 影片播放器 -->
-      <VideoPlyr></VideoPlyr>
-      <!-- <vue-plyr ref="plyr">
-        <video
-          :autoplay="options.autoplay==='true'"
-          controls
-          crossorigin
-          playsinline
-          data-poster="poster.jpg"
-        >
-          <source
-            size="720"
-            src="../assets/video/有聲影片測試.mp4"
-            type="video/mp4"
-          />
-          <source
-            size="1080"
-            src="../assets/video/有聲影片測試.mp4"
-            type="video/mp4"
-          />
-          <track
-            default
-            kind="captions"
-            label="English captions"
-            src="../assets/video/有聲影片測試.mp4"
-            srclang="en"
-          />
-        </video>
-      </vue-plyr> -->
-      <!-- //* 被拖曳的物件 -->
-      <DropItem :dropWrap="dropWrap" :videoTime="videoTime"></DropItem>
+    <div class="por">
+      <div class="w-75" @click="goVideoMarkerPosition" ref="dropWrap">
+        <!-- //* 影片播放器 -->
+        <VideoPlyr></VideoPlyr>
+        <!-- //* 被拖曳的物件 -->
+        <DropItem :dropWrap="dropWrap" :videoTime="videoTime"></DropItem>
+      </div>
     </div>
   <!-- 確認出題按鈕 -->
   <div class="my-3">
@@ -53,12 +28,10 @@
 import { mapState, mapMutations } from 'vuex'
 import Tooltip from '../../node_modules/bootstrap/js/src/tooltip.js'
 import VideoPlyr from '../components/video/plyr/PlyrVideo.vue'
-// import DropBtn from '../components/video/drop/DropBtn.vue'
 import DropItem from '../components/video/drop/DropItem.vue'
 export default {
   components: {
     VideoPlyr,
-    // DropBtn,
     DropItem
   },
 
@@ -95,16 +68,6 @@ export default {
 
   methods: {
     ...mapMutations(['SAVE_QUESTIONS_LIST', 'SAVE_OPTIONS']),
-    //!  設定拖曳外圍邊界 若沒用到就刪掉
-    getVidBorder () {
-      // this.questionsList[0].
-      // this.vidBorder = {
-      //   left: this.dropWrap.offsetLeft,
-      //   right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - this.currentDropItem.offsetWidth,
-      //   top: this.dropWrap.offsetTop,
-      //   bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.currentDropItem.offsetHeight
-      // }
-    },
     //* 拖曳改變元素大小
     // dragChangeSize (e, index) {
     //   const that = this
@@ -248,10 +211,10 @@ export default {
       this.questionsList.push({
         id: this.randomString(),
         showTime: this.videoTime,
-        x: '61',
-        y: '170',
-        width: '248',
-        height: '234'
+        x: 0,
+        y: 0,
+        width: 248,
+        height: 234
       })
 
       this.getMarker() //* 生成標記
@@ -398,7 +361,6 @@ export default {
     this.dropWrap = this.$refs.dropWrap
 
     if (this.questionsList2.length > 0) {
-      this.getVidBorder()
       this.questionsList = this.questionsList2
       this.getMarker()
     }
@@ -464,9 +426,9 @@ export default {
     opacity: 0.7;
   }
 }
-// .por {
-//   position: relative;
-// }
+.por {
+  position: relative;
+}
 
 .marker {
   position: absolute;

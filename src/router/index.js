@@ -7,8 +7,8 @@ const routes = [
     component: () => import('@/views/MarkerWrap.vue')
   },
   {
-    path: '/about',
-    name: 'about',
+    path: '/moveItem',
+    name: 'moveItem',
     component: () => import('../views/MoveItem.vue')
   },
   {
