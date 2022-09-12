@@ -26,7 +26,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import Tooltip from '../../node_modules/bootstrap/js/src/tooltip.js'
+import Tooltip from 'bootstrap/js/src/tooltip'
 import VideoPlyr from '../components/video/plyr/PlyrVideo.vue'
 import DropItem from '../components/video/drop/DropItem.vue'
 export default {
@@ -372,7 +372,7 @@ export default {
       this.videoTime = this.player.currentTime
 
       //* 題目出現時自動暫停
-      this.questionsList.forEach((question, index) => {
+      this.questionsList.forEach((question, index, arr) => {
       //* 如果影片時間抵達題目顯示時間時
         // if (Math.floor(this.videoTime) === Math.floor(question.showTime)) {
         if (this.videoTime >= question.showTime && this.videoTime <= question.showTime + 0.5) {
@@ -390,13 +390,14 @@ export default {
         // ? 若沒鎖定暫停的話，提交答案後因為影片一樣在設定顯示時間，所以會再度暫停，所以需要將暫停鎖定
         //* 鎖定時間 = 影片當前時間 >= 下一個題目顯示的時間(鎖定到下一個題目前解除)
         //* 如果有下一個需顯示的題目才做解除鎖定時間的計算(解決沒下一題計算時跳出的錯誤)
-        if (this.questionsList[index + 1]) {
-          const lockTime = this.videoTime >= this.questionsList[index + 1].showTime && this.videoTime <= this.questionsList[index + 1].showTime + 0.5
+        if (arr[index + 1]) {
+          //* 到下一題的前0.5秒解除鎖定
+          const lockTime = this.videoTime >= arr[index + 1].showTime - 0.5 && this.videoTime <= arr[index + 1].showTime
           //* 如果影片時間來到下一個題目顯示的時間 (0.5秒後解除鎖定)
           if (lockTime) {
             this.vidStopDisabled = false
           }
-        } else if (this.videoTime >= this.questionsList[this.questionsList.length - 1].showTime + 0.5) {
+        } else if (this.videoTime >= arr[arr.length - 1].showTime + 0.5) {
         //* 如果當前影片時間到顯示最後一題的時間(沒有下一題)
         //* 一秒後自動解除鎖定(自動解除鎖定，若用戶跳回去過去題目顯示的時間，即可正常顯示題目)
           setTimeout(() => {

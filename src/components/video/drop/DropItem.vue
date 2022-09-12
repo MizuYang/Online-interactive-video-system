@@ -1,33 +1,33 @@
 <template>
 
   <template v-for="(question, index) in questionsList2" :key="`questionItem${index}`">
-      <div class="bg-info text-center px-3 py-3" :class="{drop: isMoveItemPage, 'drop-style':isMoveItemPage, poa: $route.path==='/examStart'||$route.path==='/youtubeVideo'}" @mousedown="dragStart($event,`dropItem${index}`)" :data-question-id="question.id"
+      <div class="bg-info text-center px-3 py-3" :class="{drop: isTeacherQuePage, 'drop-style':isTeacherQuePage, poa: $route.path==='/examStart'||$route.path==='/youtubeVideo'}" @mousedown="dragStart($event,`dropItem${index}`)" :data-question-id="question.id"
           :ref="`dropItem${index}`" :style="{left:`${question.x}px`, top:`${question.y}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
           <!-- v-if="Math.floor(videoTime)===Math.floor(question.showTime)" -->
         <div class="d-flex justify-content-between">
           <h3 class="text-center">第{{ index+1 }}題</h3>
-          <div v-if="isMoveItemPage">
+          <div v-if="isTeacherQuePage">
               <button type="button" class="btn btn-danger btn-sm ms-3 d-inline-block" @click="deleteQuestion(question.id)">X</button>
           </div>
         </div>
         <div class="text-start mb-0">
           標題
-          <template v-if="isMoveItemPage">
+          <template v-if="isTeacherQuePage">
             <button type="button" @click="loseIndex(index)" :disabled="!questionsList2[index].zIndex||questionsList2[index].zIndex<=0">－</button>
             <button type="button" @click="addIndex(index)">＋</button>
             權重：<span :ref="`zIndexNum${index}`">0</span>
           </template>
         </div>
-        <input type="text" :class="{'drop-style': isMoveItemPage}" v-model.lazy="questionsList2[index].title">
+        <input type="text" :class="{'drop-style': isTeacherQuePage}" v-model.lazy="questionsList2[index].title">
 
         <p class="text-start mb-0">內容</p>
-        <input type="text" :class="{'drop-style': isMoveItemPage}" v-model.lazy="questionsList2[index].content">
+        <input type="text" :class="{'drop-style': isTeacherQuePage}" v-model.lazy="questionsList2[index].content">
 
         <p class="text-start mb-0">答案</p>
-        <input type="text" :class="{'drop-style': isMoveItemPage}" v-model.lazy="questionsList2[index].answer">
+        <input type="text" :class="{'drop-style': isTeacherQuePage}" v-model.lazy="questionsList2[index].answer">
 
         <!-- 拖曳按鈕 -->
-        <div v-if="isMoveItemPage">
+        <div v-if="isTeacherQuePage">
           <DropBtn :dropWrap="dropWrap" :index="index"></DropBtn>
         </div>
       </div>
@@ -53,9 +53,9 @@ export default {
 
   computed: {
     ...mapState(['questionsList2', 'plyr']),
-    //* 判斷是否為 moveItem 頁面
-    isMoveItemPage () {
-      return this.$route.path === '/moveItem'
+    //* 判斷是否為 teacherQuestions 頁面
+    isTeacherQuePage () {
+      return this.$route.path === '/teacherQuestions'
     }
   },
 
@@ -72,8 +72,8 @@ export default {
       //* 如果點擊的是控制大小的 a 標籤，則中斷程式碼
       if (e.target.nodeName === 'A') return
       if (e.target.nodeName === 'BUTTON') return
-      //* 如果不是 moveItem 頁面就中斷(學生拖曳無效)
-      if (!this.isMoveItemPage) return
+      //* 如果不是 teacherQuestions 頁面就中斷(學生拖曳無效)
+      if (!this.isTeacherQuePage) return
 
       this.currentDropItem = this.$refs[dropItemRefName][0]
 

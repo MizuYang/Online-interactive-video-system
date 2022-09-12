@@ -1,7 +1,7 @@
 <template>
   <nav>
     <router-link to="/">練習標記</router-link> |
-    <router-link to="/moveItem">練習拖曳</router-link> |
+    <router-link to="/teacherQuestions">教師出題</router-link> |
     <router-link to="/examStart">考試開始</router-link> |
     <router-link to="/youtubeVideo">Youtube 影片</router-link>
   </nav>
@@ -64,8 +64,8 @@ questionList: [
   // 影片套件、拖曳按鈕、拖曳區塊
 //! 將可複用性的函式用 ESM 模組化後複用
   // getMarker
-//! 測試建立三個題目，從最後題目跳轉到第一題是否能自動暫停
-//! 優化影片暫停、題目顯示邏輯
+//* 測試建立三個題目，從最後題目跳轉到第一題是否能自動暫停 v
+//* 優化影片暫停、題目顯示邏輯 v
 //! 整理多餘程式碼
 
 //* 使用 Youtube 影片看看(直接用模組化的方式) v

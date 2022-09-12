@@ -205,7 +205,7 @@ export default {
           if (lockTime) {
             this.vidStopDisabled = false
           }
-        } else if (this.videoTime >= this.questionsList2[this.questionsList2.length - 1].showTime + 0.5) {
+        } else if (this.videoTime >= arr[arr.length - 1].showTime + 0.5) {
         //* 如果當前影片時間到顯示最後一題的時間(沒有下一題)
         //* 一秒後自動解除鎖定(自動解除鎖定，若用戶跳回去過去題目顯示的時間，即可正常顯示題目)
           setTimeout(() => {
@@ -221,5 +221,8 @@ export default {
 <style lang='scss' scope>
 .por {
   position: relative;
+}
+.marker:hover {
+  background-color: blue;
 }
 </style>

@@ -201,7 +201,6 @@ export default {
         })
 
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        console.log('tooltipTriggerList', tooltipTriggerList)
         tooltipTriggerList.forEach(function (tooltipTriggerEl) {
           return new Tooltip(tooltipTriggerEl)
         })

@@ -7,9 +7,9 @@ const routes = [
     component: () => import('@/views/MarkerWrap.vue')
   },
   {
-    path: '/moveItem',
-    name: 'moveItem',
-    component: () => import('../views/MoveItem.vue')
+    path: '/teacherQuestions',
+    name: 'teacherQuestions',
+    component: () => import('../views/TeacherQuestions.vue')
   },
   {
     path: '/examStart',
