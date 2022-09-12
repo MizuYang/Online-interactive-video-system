@@ -1,5 +1,10 @@
 <template>
-  <div class="por w-75" ref="dropWrap">
+  <header>
+    <p v-if="questionsList2.length>0">教師選擇影片
+      <span ref="autoplayTips2" class="fw-bold border-bottom"></span>
+    </p>
+  </header>
+  <div class="por w-75" ref="dropWrap2" @click="goVideoMarkerPosition">
     <!-- Youtube 影片播放器 -->
     <div class="plyr__video-embed" id="player">
       <iframe src="https://www.youtube.com/watch?v=LFaKMm0Gulw"
@@ -7,12 +12,13 @@
       </iframe>
     </div>
     <!-- 題目 -->
-    <DropItem :dropWrap="dropWrap" :videoTime="videoTime"></DropItem>
+    <DropItem :dropWrap="dropWrap2" :videoTime="videoTime"></DropItem>
   </div>
 </template>
 
 <script>
 import Plyr from '../../../../node_modules/plyr'
+import Tooltip from 'bootstrap/js/src/tooltip'
 import { mapState } from 'vuex'
 
 import DropItem from '../drop/DropItem.vue'
@@ -25,20 +31,100 @@ export default {
     return {
       player: '',
       videoTime: 0,
-      dropWrap: ''
+      dropWrap2: ''
     }
   },
 
   computed: {
-    ...mapState(['questionsList2'])
+    ...mapState(['options', 'questionsList2'])
   },
 
   methods: {
+    //* 取得時間軸標記
+    getMarker () {
+      const progessEl = this.player.elements.progress
+
+      let hasmMarkerWarp = null
+      console.log(this.player)
+      this.player.elements.progress.children.forEach(item => {
+        //* 如果有 markerWarp 就不再重複生成 markerWarp 了
+        if (item.getAttribute('id') === 'markerWarp') {
+          hasmMarkerWarp = true
+        }
+      })
+      //! 如果沒有 markerWarp 才生成 markerWarp
+      if (!hasmMarkerWarp) {
+        //* 生成一個 span 掛在 progess 底下，用來掛載所有標記按鈕
+        const span = document.createElement('span')
+        span.setAttribute('id', 'markerWarp')
+        progessEl.appendChild(span)
+        hasmMarkerWarp = true
+      }
+      let str = ''
+      //* 得到問題顯示時間在影片中的%數位置
+      this.questionsList2.forEach(item => {
+        //* 題目位置 = 題目位置時間 / 影片總時間 *100
+        const questionTime = Math.floor(item.showTime / this.player.duration * 100)
+        str += `
+          <button type="button" class="marker" id="markerWarp" style="left:${questionTime}%" data-questionTime="${item.showTime}"
+            data-bs-toggle="tooltip" data-bs-placement="bottom"></button>
+          `
+      })
+      //* 使用 innerHTML 的方式覆蓋，才不會有重複生成的元素
+      const markerWarp = document.getElementById('markerWarp')
+      if (markerWarp) {
+        markerWarp.innerHTML = str
+      }
+
+      //* 取得標記 hover 文字提示
+      this.hoverMarkerTips()
+    },
+    //* 跳轉到題目標記處
+    goVideoMarkerPosition (e) {
+      const isTimelineBtn = e.target.getAttribute('data-questionTime') !== null
+      //* 如果是題目標記才執行
+      if (isTimelineBtn) {
+        const questionTime = e.target.getAttribute('data-questionTime')
+        this.player.currentTime = parseInt(questionTime) + 0.5
+      }
+    },
+    //* '當前時間軸標記變藍色，否則不變色
+    currentMarkStyle () {
+      //* 抵達時間軸上該標記時，標記變為藍色
+      //* 取出所有標記的元素 (前三個會是套件的元件:時間軸外殼、時間軸條、時間tip)
+      const markers = this.player.elements.progress.children[3].children
+      markers.forEach(mark => {
+        const markTime = parseInt(mark.getAttribute('data-questiontime'))
+        //* 如果標記時間 === 當前影片播放的時間，標記變藍色
+        if (markTime === Math.floor(this.videoTime)) {
+          mark.style.backgroundColor = 'blue'
+        } else {
+          //* 如果影片播放時間不是標記時間，則變回紅色
+          mark.style.backgroundColor = 'red'
+        }
+      })
+    },
+    //* 標記 hover 文字提示
+    hoverMarkerTips () {
+      const tooltipTriggerList = [...document.querySelectorAll('[data-bs-toggle="tooltip"]')]
+      const arr = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new Tooltip(tooltipTriggerEl)
+      })
+      if (arr.length > 0) {
+        this.questionsList2.forEach((item, index) => {
+          //* 如果有標題
+          if (item.title) {
+            //* 加上第幾題+題目標題
+            arr[index]._config.title = `第${index + 1}題, ${item.title}`
+          }
+        })
+      }
+    }
   },
 
   mounted () {
     //* 取得播放器外圍
-    this.dropWrap = this.$refs.dropWrap
+    this.dropWrap2 = this.$refs.dropWrap2
     this.player = new Plyr('#player', {
       // noCookie: false,
       // rel: 0,
@@ -80,6 +166,14 @@ export default {
         advertisement: '廣告'
       }
     })
+    //* 自動播放提示
+    const isAutoplay = this.options.autoplay
+    this.$refs.autoplayTips2.textContent = isAutoplay ? '自動播放' : '手動播放'
+
+    //* 取得時間戳記
+    setTimeout(() => {
+      this.getMarker()
+    }, 1000)
 
     console.log(this.player)
     console.log(this.questionsList2)
