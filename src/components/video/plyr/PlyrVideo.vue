@@ -32,19 +32,8 @@
 import { mapState, mapMutations } from 'vuex'
 export default {
 
-  data () {
-    return {
-      // options: {
-      //   autoplay: false
-      // }
-    }
-  },
-
   computed: {
     ...mapState(['options'])
-  },
-
-  watch: {
   },
 
   methods: {
@@ -53,10 +42,7 @@ export default {
 
   mounted () {
     this.$store.commit('PLAYER_INIT', { player: this.$refs.plyr.player })
-    console.log(typeof (this.options.autoplay))
   }
 
 }
 </script>
-
-<style lang='scss' scope></style>

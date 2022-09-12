@@ -10,23 +10,7 @@ import YoutubeVideo from '../components/video/youtube/YoutubeVideo.vue'
 export default {
   components: {
     YoutubeVideo
-  },
-
-  data () {
-    return {
-    }
-  },
-
-  watch: {
-  },
-
-  methods: {
-  },
-
-  mounted () {
   }
 
 }
 </script>
-
-<style lang='scss' scope></style>

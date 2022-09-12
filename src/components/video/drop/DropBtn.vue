@@ -11,9 +11,6 @@ import { mapMutations, mapState } from 'vuex'
 export default {
   props: ['dropWrap', 'index'],
 
-  components: {
-  },
-
   data () {
     return {
       questionsList: []
@@ -22,9 +19,6 @@ export default {
 
   computed: {
     ...mapState(['questionsList2'])
-  },
-
-  watch: {
   },
 
   methods: {
@@ -42,15 +36,11 @@ export default {
         bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - currentDropItem.offsetHeight
       }
 
-      console.log(area)
-
       let dir = '' // 设置好方向
       const firstX = e.clientX // 获取第一次点击的横坐标
       const firstY = e.clientY // 获取第一次点击的纵坐标
       const width = currentDropItem.offsetWidth // 获取到元素的宽度
       const height = currentDropItem.offsetHeight // 获取到元素的高度
-      // const Left = currentDropItem.offsetLeft // 获取到距离左边的距离
-      // const Top = currentDropItem.offsetTop // 获取到距离上边的距离
 
       const Left = currentDropItem.offsetLeft // 获取到距离左边的距离
       const Top = currentDropItem.offsetTop // 获取到距离上边的距离
@@ -83,8 +73,6 @@ export default {
           //* 如果沒超過邊界才變更寬度
           if (area[dir] >= Left + (e.clientX - firstX)) {
             //* 將寬度、座標傳回資料集
-            console.log(that.questionsList)
-            console.log(that.questionsList2)
             that.questionsList[index].width = width + (e.clientX - firstX)
             currentDropItem.style.width = width + (e.clientX - firstX)
           }
@@ -124,5 +112,3 @@ export default {
 
 }
 </script>
-
-<style lang='scss' scope></style>

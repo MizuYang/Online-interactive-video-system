@@ -10,10 +10,13 @@
 
     <div class="por">
       <div class="w-75" @click="goVideoMarkerPosition" ref="dropWrap">
+
         <!-- //* 影片播放器 -->
         <VideoPlyr></VideoPlyr>
+
         <!-- //* 被拖曳的物件 -->
         <DropItem :dropWrap="dropWrap" :videoTime="videoTime"></DropItem>
+
       </div>
     </div>
   <!-- 確認出題按鈕 -->
@@ -68,143 +71,7 @@ export default {
 
   methods: {
     ...mapMutations(['SAVE_QUESTIONS_LIST', 'SAVE_OPTIONS']),
-    //* 拖曳改變元素大小
-    // dragChangeSize (e, index) {
-    //   const that = this
-    //   const currentDropItem = this.$refs[`dropItem${index}`][0]
 
-    //   //* 一開始先決定邊界範圍
-    //   const area = {
-    //     left: this.dropWrap.offsetLeft,
-    //     right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - currentDropItem.offsetWidth,
-    //     top: this.dropWrap.offsetTop,
-    //     bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - currentDropItem.offsetHeight
-    //   }
-
-    //   console.log(area)
-
-    //   let dir = '' // 设置好方向
-    //   const firstX = e.clientX // 获取第一次点击的横坐标
-    //   const firstY = e.clientY // 获取第一次点击的纵坐标
-    //   const width = currentDropItem.offsetWidth // 获取到元素的宽度
-    //   const height = currentDropItem.offsetHeight // 获取到元素的高度
-    //   // const Left = currentDropItem.offsetLeft // 获取到距离左边的距离
-    //   // const Top = currentDropItem.offsetTop // 获取到距离上边的距离
-
-    //   const Left = currentDropItem.offsetLeft // 获取到距离左边的距离
-    //   const Top = currentDropItem.offsetTop // 获取到距离上边的距离
-
-    //   // 下一步判断方向距离左边的距离+元素的宽度减去自己设定的宽度，只要点击的时候大于在这个区间，他就算右边
-    //   if (firstX > Left + width - 10) {
-    //     dir = 'right'
-    //   } else if (firstX < Left + 10) {
-    //     dir = 'left'
-    //   }
-    //   if (firstY > Top + height - 10) {
-    //     dir = 'bottom'
-    //   } else if (firstY < Top + 10) {
-    //     dir = 'top'
-    //   }
-    //   // 判断方向结束
-    //   document.onmousemove = function (e) {
-    //     if (dir === 'left') {
-    //       if (e.clientX < firstX) {
-    //         //* 如果沒超過邊界才變更寬度
-    //         if (e.clientX >= area[dir]) {
-    //           //* 將寬度、座標傳回資料集
-    //           that.questionsList[index].width = width - (e.clientX - firstX)
-    //           that.questionsList[index].x = Left + (e.clientX - firstX)
-    //           currentDropItem.style.width = width - (e.clientX - firstX)
-    //           currentDropItem.style.left = Left + (e.clientX - firstX)
-    //         }
-    //       }
-    //     } else if (dir === 'right') {
-    //       //* 如果沒超過邊界才變更寬度
-    //       if (area[dir] >= Left + (e.clientX - firstX)) {
-    //         //* 將寬度、座標傳回資料集
-    //         that.questionsList[index].width = width + (e.clientX - firstX)
-    //         currentDropItem.style.width = width + (e.clientX - firstX)
-    //       }
-    //     } else if (dir === 'top') {
-    //       console.log('右邊界：', area[dir], '滑鼠當前座標：', e.clientY)
-    //       console.log('右邊', Top)
-    //       console.log(e.clientY - firstY)
-    //       console.log(!e.clientY === area[dir])
-    //       if (e.clientY < firstY) {
-    //         //* 如果沒超過邊界才變更寬度
-    //         if (e.clientY >= area[dir]) {
-    //           //* 將寬度、座標傳回資料集
-    //           that.questionsList[index].height = height - (e.clientY - firstY)
-    //           that.questionsList[index].y = Top + (e.clientY - firstY)
-    //           currentDropItem.style.height = height - (e.clientY - firstY)
-    //           currentDropItem.style.top = Top + (e.clientY - firstY)
-    //         }
-    //       }
-    //     } else if (dir === 'bottom') {
-    //       //* 如果沒超過邊界才變更寬度
-    //       if (area[dir] >= Top + (e.clientY - firstY)) {
-    //         //* 將寬度、座標傳回資料集
-    //         that.questionsList[index].height = height + (e.clientY - firstY)
-    //         currentDropItem.style.height = height + (e.clientY - firstY)
-    //       }
-    //     }
-    //   }
-    //   //* 清除事件
-    //   document.onmouseup = function () {
-    //     document.onmousemove = null
-    //   }
-    // },
-    // //* 滑鼠按下:拖動開始
-    // dragStart (e, dropItemRefName) {
-    //   //* 如果點擊的是控制大小的 a 標籤，則中斷程式碼
-    //   if (e.target.nodeName === 'A') return
-    //   if (e.target.nodeName === 'BUTTON') return
-    //   this.currentDropItem = this.$refs[dropItemRefName][0]
-
-    //   this.startX = e.clientX - this.currentDropItem.offsetLeft
-    //   this.startY = e.clientY - this.currentDropItem.offsetTop
-
-    //   //* 拖動時才開始監聽滑鼠移動、滑鼠放開
-    //   document.addEventListener('mousemove', this.move)
-    //   document.addEventListener('mouseup', this.stop)
-    // },
-    // //* 滑鼠移動:移動座標
-    // move (e) {
-    //   //* 計算出拖曳物件最左上角座標
-    //   this.x = e.clientX - this.startX
-    //   this.y = e.clientY - this.startY
-
-    //   //* 一開始先決定邊界範圍
-    //   const area = {
-    //     left: this.dropWrap.offsetLeft,
-    //     right: this.dropWrap.offsetLeft + this.dropWrap.offsetWidth - this.currentDropItem.offsetWidth,
-    //     top: this.dropWrap.offsetTop,
-    //     bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.currentDropItem.offsetHeight
-    //   }
-
-    //   // console.log(area)
-
-    //   //* 這個要加在move  設定left與top之前
-    //   this.x = Math.max(Math.min(this.x, area.right), area.left)
-    //   this.y = Math.max(Math.min(this.y, area.bottom), area.top)
-
-    //   //* 取得當前移動題目窗 ID 並將當前 x,y 軸賦予到題目集裡
-    //   const id = this.currentDropItem.getAttribute('data-question-id')
-    //   const itemIndex = this.questionsList.findIndex(item => {
-    //     return item.id === id
-    //   })
-    //   //* 變更拖曳位置
-    //   this.questionsList[itemIndex].x = `${this.x}`
-    //   this.questionsList[itemIndex].y = `${this.y}`
-
-    //   //* 把資料傳回 store
-    //   this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
-    // },
-    // //* 滑鼠放開:拖動結束
-    // stop () {
-    //   document.removeEventListener('mousemove', this.move)
-    //   document.removeEventListener('mouseup', this.stop)
-    // },
     //* 新增考題
     addQuestions () {
       this.player.pause()
@@ -356,7 +223,6 @@ export default {
 
   mounted () {
     //* 取得播放器元素
-    // this.player = this.$refs.plyr.player
     this.player = this.plyr
     this.dropWrap = this.$refs.dropWrap
 
@@ -374,16 +240,13 @@ export default {
       //* 題目出現時自動暫停
       this.questionsList.forEach((question, index, arr) => {
       //* 如果影片時間抵達題目顯示時間時
-        // if (Math.floor(this.videoTime) === Math.floor(question.showTime)) {
         if (this.videoTime >= question.showTime && this.videoTime <= question.showTime + 0.5) {
         //* 如果沒鎖定暫停影片時
           if (!this.vidStopDisabled) {
           //* 鎖定暫停
             this.vidStopDisabled = true
             //* 顯示題目、暫停播放
-            // setTimeout(() => {
             this.player.pause()
-            // }, 200)
           }
         }
         this.currentMarkStyle()
@@ -412,12 +275,7 @@ export default {
 <style lang='scss' scope>
 .drop {
   position: absolute;
-  // top: 0%;
-  // left: 0%;
-  // top: 20%;
-  // left: 20%;
   user-select: none;
-  // border:4px solid blue;
   min-width: 20%;
   min-height: 25%;
 }
@@ -442,7 +300,6 @@ export default {
 .marker:hover {
   background-color: blue;
 }
-//* 測試拖曳大小
 .changeSizeBtn {
   position: absolute;
   padding: 3px;

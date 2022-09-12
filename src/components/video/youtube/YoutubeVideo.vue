@@ -5,12 +5,14 @@
     </p>
   </header>
   <div class="por w-75" ref="dropWrap2" @click="goVideoMarkerPosition">
+
     <!-- Youtube 影片播放器 -->
     <div class="plyr__video-embed" id="player">
       <iframe src="https://www.youtube.com/watch?v=B-BQnCwTBeQ"
               allowfullscreen allowtransparency allow="autoplay">
       </iframe>
     </div>
+
     <!-- 題目 -->
     <DropItem :dropWrap="dropWrap2" :videoTime="videoTime"></DropItem>
   </div>
@@ -46,7 +48,7 @@ export default {
       const progessEl = this.player.elements.progress
 
       let hasmMarkerWarp = null
-      console.log(this.player)
+
       this.player.elements.progress.children.forEach(item => {
         //* 如果有 markerWarp 就不再重複生成 markerWarp 了
         if (item.getAttribute('id') === 'markerWarp') {

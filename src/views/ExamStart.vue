@@ -11,33 +11,7 @@
     <div class="por minSize w-75" @click="goVideoMarkerPosition" ref="dropWrap" v-show="questionsList2.length>0">
       <!-- //* 影片播放器 -->
       <VideoPlyr></VideoPlyr>
-      <!-- <vue-plyr ref="plyr2">
-        <video
-          :autoplay="options.autoplay==='true'"
-          controls
-          crossorigin
-          playsinline
-          data-poster="poster.jpg"
-        >
-          <source
-            size="720"
-            src="../assets/video/有聲影片測試.mp4"
-            type="video/mp4"
-          />
-          <source
-            size="1080"
-            src="../assets/video/有聲影片測試.mp4"
-            type="video/mp4"
-          />
-          <track
-            default
-            kind="captions"
-            label="English captions"
-            src="../assets/video/有聲影片測試.mp4"
-            srclang="en"
-          />
-        </video>
-      </vue-plyr> -->
+
       <!-- //* 被拖曳的物件 -->
       <DropItem :videoTime="videoTime"></DropItem>
 
@@ -165,7 +139,6 @@ export default {
     this.$refs.autoplayTips.textContent = isAutoplay ? '自動播放' : '手動播放'
 
     this.player = this.plyr
-    // this.player = this.$refs.plyr2.player
 
     //* 將播放器時間改為"增量計數器"而不是倒數計時
     this.player.config.invertTime = false
@@ -182,16 +155,13 @@ export default {
       //* 題目出現時自動暫停
       this.questionsList2.forEach((question, index, arr) => {
       //* 如果影片時間抵達題目顯示時間時
-        // if (Math.floor(this.videoTime) === Math.floor(question.showTime)) {
         if (this.videoTime >= question.showTime && this.videoTime <= question.showTime + 0.5) {
         //* 如果沒鎖定暫停影片時
           if (!this.vidStopDisabled) {
           //* 鎖定暫停
             this.vidStopDisabled = true
             //* 顯示題目、暫停播放
-            // setTimeout(() => {
             this.player.pause()
-            // }, 200)
           }
         }
         setTimeout(() => {
@@ -235,22 +205,4 @@ export default {
 .marker:hover {
   background-color: blue;
 }
-
-      // <template v-for="(question, index) in questionsList2" :key="`questionItem${index}`">
-      //   <div class="poa bg-info text-center px-3 py-3" :data-question-id="question.id"
-      //       :ref="`dropItem${index}`" :style="{left:`${question.x||430}px`, top:`${question.y-12}px`,width:`${question.width}px`, height: `${question.height}px`, zIndex: parseInt(question.zIndex)}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
-      //       <!-- v-if="Math.floor(videoTime)===Math.floor(question.showTime)" -->
-      //       <h3 class="me-auto">第{{ index+1 }}題</h3>
-      //     <div class="text-start mb-0">
-      //       標題
-      //     </div>
-      //     <input type="text" v-model.lazy="questionsList2[index].title">
-
-      //     <p class="text-start mb-0">內容</p>
-      //     <input type="text" v-model.lazy="questionsList2[index].content">
-
-      //     <p class="text-start mb-0">答案</p>
-      //     <input type="text" v-model.lazy="questionsList2[index].answer">
-      //   </div>
-      // </template>
 </style>

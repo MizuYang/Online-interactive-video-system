@@ -29,7 +29,6 @@
     </vue-plyr>
     <!-- //* 題目視窗 -->
     <template v-for="(question, index) in questionsList" :key="`question${index}`">
-      <!-- v-if="Math.floor(videoTime)===question.showTime" -->
       <div class="w30 poa bg-info text-center px-3 py-3" :ref="question.id" v-if="videoTime>=question.showTime&&videoTime<=question.showTime+0.5"
         :style="{top: question.top, left: question.left}">
         <h3>{{ question.title }}</h3>
@@ -43,7 +42,7 @@
 </template>
 
 <script>
-import Tooltip from '../../node_modules/bootstrap/js/src/tooltip.js'
+import Tooltip from 'bootstrap/js/src/tooltip'
 export default {
   data () {
     return {

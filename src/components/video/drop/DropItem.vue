@@ -3,7 +3,6 @@
   <template v-for="(question, index) in questionsList2" :key="`questionItem${index}`">
       <div class="bg-info text-center px-3 py-3" :class="{drop: isTeacherQuePage, 'drop-style':isTeacherQuePage, poa: $route.path==='/examStart'||$route.path==='/youtubeVideo'}" @mousedown="dragStart($event,`dropItem${index}`)" :data-question-id="question.id"
           :ref="`dropItem${index}`" :style="{left:`${question.x}px`, top:`${question.y}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
-          <!-- v-if="Math.floor(videoTime)===Math.floor(question.showTime)" -->
         <div class="d-flex justify-content-between">
           <h3 class="text-center">第{{ index+1 }}題</h3>
           <div v-if="isTeacherQuePage">
@@ -26,9 +25,11 @@
         <p class="text-start mb-0">答案</p>
         <input type="text" :class="{'drop-style': isTeacherQuePage}" v-model.lazy="questionsList2[index].answer">
 
-        <!-- 拖曳按鈕 -->
         <div v-if="isTeacherQuePage">
+
+          <!-- 拖曳按鈕 -->
           <DropBtn :dropWrap="dropWrap" :index="index"></DropBtn>
+
         </div>
       </div>
     </template>
@@ -98,8 +99,6 @@ export default {
         bottom: this.dropWrap.offsetTop + this.dropWrap.offsetHeight - this.currentDropItem.offsetHeight
       }
 
-      // console.log(area)
-
       //* 這個要加在move  設定left與top之前
       this.x = Math.max(Math.min(this.x, area.right), area.left)
       this.y = Math.max(Math.min(this.y, area.bottom), area.top)
@@ -109,8 +108,7 @@ export default {
       const itemIndex = this.questionsList.findIndex(item => {
         return item.id === id
       })
-      console.log('itemIndex', itemIndex)
-      console.log('this.questionsList', this.questionsList)
+
       //* 變更拖曳位置
       this.questionsList[itemIndex].x = this.x
       this.questionsList[itemIndex].y = this.y
@@ -178,7 +176,6 @@ export default {
       this.$refs[`dropItem${index}`][0].style.zIndex++
       this.$refs[`zIndexNum${index}`][0].textContent = this.$refs[`dropItem${index}`][0].style.zIndex
       this.questionsList[index].zIndex = this.$refs[`dropItem${index}`][0].style.zIndex
-      console.log(this.questionsList)
       //* 把資料傳回 store
       this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
     },
@@ -204,40 +201,4 @@ export default {
 .poa {
   position: absolute;
 }
-// <template v-for="(question, index) in questionsList" :key="`questionItem${index}`">
-//   <div class="drop drop-style bg-info text-center px-3 py-3" @mousedown="dragStart($event,`dropItem${index}`)" :data-question-id="question.id"
-//       :ref="`dropItem${index}`" :style="{left:`${question.x}px`, top:`${question.y}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
-//       <!-- v-if="Math.floor(videoTime)===Math.floor(question.showTime)" -->
-//     <div class="d-flex justify-content-between">
-//       <div class="text-start">
-//         <button type="button" class="btn btn-secondary btn-sm p-1" @click="sizeSmaller(index)">小</button>
-//         <button type="button" class="btn btn-secondary btn-sm mx-1 p-1" @click="sizeBigger(index)">大</button>
-//       </div>
-//       <h3 class="text-center">第{{ index+1 }}題</h3>
-//       <div>
-//           <button type="button" class="btn btn-danger btn-sm ms-3 d-inline-block" @click="deleteQuestion(question.id)">X</button>
-//       </div>
-//     </div>
-//     <div class="text-start mb-0">
-//       標題
-//       <button type="button" @click="loseIndex(index)" :disabled="!questionsList[index].zIndex||questionsList[index].zIndex<=0">－</button>
-//       <button type="button" @click="addIndex(index)">＋</button>
-//       權重：<span :ref="`zIndexNum${index}`">0</span>
-//     </div>
-//     <input type="text" class="drop-style" v-model.lazy="questionsList[index].title">
-
-//     <p class="text-start mb-0">內容</p>
-//     <input type="text" class="drop-style" v-model.lazy="questionsList[index].content">
-
-//     <p class="text-start mb-0">答案</p>
-//     <input type="text" class="drop-style" v-model.lazy="questionsList[index].answer">
-
-//     <!-- 拖曳按鈕 -->
-//     <DropBtn :dropWrap="dropWrap" :index="index"></DropBtn>
-//     <!-- <a href="javascript:;" class="changeSizeBtn top" @mousedown.prevent.stop="dragChangeSize($event,index)"></a>
-//     <a href="javascript:;" class="changeSizeBtn left" @mousedown.prevent.stop="dragChangeSize($event,index)"></a>
-//     <a href="javascript:;" class="changeSizeBtn right" @mousedown.prevent.stop="dragChangeSize($event,index)"></a>
-//     <a href="javascript:;" class="changeSizeBtn bottom" @mousedown.prevent.stop="dragChangeSize($event,index)"></a> -->
-//   </div>
-// </template>
 </style>
