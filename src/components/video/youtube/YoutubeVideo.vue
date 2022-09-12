@@ -225,6 +225,6 @@ export default {
   position: relative;
 }
 .marker:hover {
-  background-color: blue;
+  background-color: blue !important;
 }
 </style>

@@ -8,7 +8,8 @@
       <label for="autoplay">自動播放</label>
     </div>
 
-    <div class="por">
+    <div class="">
+    <!-- <div class="por"> -->
       <div class="w-75" @click="goVideoMarkerPosition" ref="dropWrap">
 
         <!-- //* 影片播放器 -->
@@ -40,9 +41,6 @@ export default {
 
   data () {
     return {
-      // options: {
-      //   autoplay: localStorage.getItem('vid-autoplay') || false
-      // },
       videoTime: 0,
       vidStopDisabled: false,
       vidBorder: {}, //* 影片播放器邊界
@@ -78,8 +76,9 @@ export default {
       this.questionsList.push({
         id: this.randomString(),
         showTime: this.videoTime,
-        x: 0,
-        y: 0,
+        //* 影片播放器的左上角座標 (新增題目時才會出現在限制區域中的左上角)
+        x: this.dropWrap.offsetLeft,
+        y: this.dropWrap.offsetTop,
         width: 248,
         height: 234
       })
@@ -89,36 +88,6 @@ export default {
       //* 把資料傳回 store
       this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
     },
-    // //* 權重提高
-    // addIndex (index) {
-    //   this.$refs[`dropItem${index}`][0].style.zIndex++
-    //   this.$refs[`zIndexNum${index}`][0].textContent = this.$refs[`dropItem${index}`][0].style.zIndex
-    //   this.questionsList[index].zIndex = this.$refs[`dropItem${index}`][0].style.zIndex
-
-    //   //* 把資料傳回 store
-    //   this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
-    // },
-    // //* 權重降低
-    // loseIndex (index) {
-    //   this.$refs[`dropItem${index}`][0].style.zIndex--
-    //   this.$refs[`zIndexNum${index}`][0].textContent = this.$refs[`dropItem${index}`][0].style.zIndex
-    //   this.questionsList[index].zIndex = this.$refs[`dropItem${index}`][0].style.zIndex
-
-    //   //* 把資料傳回 store
-    //   this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
-    // },
-    // //* 刪除題目
-    // deleteQuestion (id) {
-    //   //* 取得要刪除的項目位置
-    //   const deleteIndex = this.questionsList.findIndex(item => {
-    //     return item.id === id
-    //   })
-    //   this.questionsList.splice(deleteIndex, 1)
-    //   this.getMarker()
-
-    //   //* 把資料傳回 store
-    //   this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
-    // },
     //* 隨機生成 ID
     randomString () {
       const num = 10

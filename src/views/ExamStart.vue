@@ -203,6 +203,6 @@ export default {
   position: absolute;
 }
 .marker:hover {
-  background-color: blue;
+  background-color: blue !important;
 }
 </style>
