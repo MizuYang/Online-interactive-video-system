@@ -63,7 +63,10 @@ questionList: [
 //* 元件模組化複用： v
   // 影片套件、拖曳按鈕、拖曳區塊
 //! 將可複用性的函式用 ESM 模組化後複用
-  // getMarker
+  - $getMarker
+  - $goVideoMarkerPosition
+  - $currentMarkStyle
+  - $hoverMarkerTips
 //* 測試建立三個題目，從最後題目跳轉到第一題是否能自動暫停 v
 //* 優化影片暫停、題目顯示邏輯 v
 //* 整理多餘程式碼 v
