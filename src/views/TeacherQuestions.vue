@@ -32,7 +32,7 @@
 import { mapState, mapMutations } from 'vuex'
 // import Tooltip from 'bootstrap/js/src/tooltip'
 import VideoPlyr from '../components/video/plyr/PlyrVideo.vue'
-import DropItem from '../components/video/drop/DropItem.vue'
+import DropItem from '../components/video/drop/DropQuestions.vue'
 export default {
   components: {
     VideoPlyr,

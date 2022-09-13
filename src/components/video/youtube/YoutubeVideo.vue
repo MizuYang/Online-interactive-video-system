@@ -28,7 +28,7 @@ import Plyr from '../../../../node_modules/plyr'
 // import Tooltip from 'bootstrap/js/src/tooltip'
 import { mapState } from 'vuex'
 
-import DropItem from '../drop/DropItem.vue'
+import DropItem from '../drop/DropQuestions.vue'
 export default {
   components: {
     DropItem

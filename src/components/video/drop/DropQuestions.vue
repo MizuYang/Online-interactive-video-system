@@ -1,8 +1,7 @@
 <template>
-
   <template v-for="(question, index) in questionsList2" :key="`questionItem${index}`">
       <div class="bg-info text-center px-3 py-3" :class="{drop: isTeacherQuePage, 'drop-style':isTeacherQuePage, poa: $route.path==='/examStart'||$route.path==='/youtubeVideo'}" @mousedown="dragStart($event,`dropItem${index}`)" :data-question-id="question.id"
-          :ref="`dropItem${index}`" :style="{left:`${question.x}px`, top:`${question.y}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
+          :ref="`dropItem${index}`" :style="{left:`${noTeacherQuePageLoseX(question.x)}px`, top:`${noTeacherQuePageLoseY(question.y)}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
         <div class="d-flex justify-content-between">
           <h3 class="text-center">第{{ index+1 }}題</h3>
           <div v-if="isTeacherQuePage">
@@ -187,6 +186,23 @@ export default {
 
       //* 把資料傳回 store
       this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
+    },
+    //* 如果不是 teacherQuestions 頁面，需扣除播放器左上角座標(因teacherQuestions的起始座標x,y與學生頁面不同)
+    noTeacherQuePageLoseX (x) {
+      if (this.isTeacherQuePage) {
+        return x
+      } else {
+        const newX = x - this.dropWrap.offsetLeft
+        return newX
+      }
+    },
+    noTeacherQuePageLoseY (y) {
+      if (this.isTeacherQuePage) {
+        return y
+      } else {
+        const newY = y - this.dropWrap.offsetTop - 12
+        return newY
+      }
     }
   },
 

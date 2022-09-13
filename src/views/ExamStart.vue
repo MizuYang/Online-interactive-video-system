@@ -13,7 +13,7 @@
       <VideoPlyr></VideoPlyr>
 
       <!--  題目 -->
-      <DropItem :videoTime="videoTime"></DropItem>
+      <DropQuestions :dropWrap="dropWrap2" :videoTime="videoTime"></DropQuestions>
 
     </div>
 
@@ -27,17 +27,18 @@
 import { mapState } from 'vuex'
 // import Tooltip from 'bootstrap/js/src/tooltip'
 import VideoPlyr from '../components/video/plyr/PlyrVideo.vue'
-import DropItem from '../components/video/drop/DropItem.vue'
+import DropQuestions from '../components/video/drop/DropQuestions.vue'
 export default {
   components: {
     VideoPlyr,
-    DropItem
+    DropQuestions
   },
 
   data () {
     return {
       player: '',
       videoTime: '',
+      dropWrap2: '',
       questionsList: []
     }
   },
@@ -136,6 +137,9 @@ export default {
     if (this.questionsList2.length === 0) return
 
     this.questionsList = this.questionsList2
+
+    //* 取得播放器外圍
+    this.dropWrap2 = this.$refs.dropWrap
 
     //* 自動播放提示
     const isAutoplay = this.options.autoplay
