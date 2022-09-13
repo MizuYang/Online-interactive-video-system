@@ -127,48 +127,10 @@ export default {
         return item.id === id
       })
       this.questionsList.splice(deleteIndex, 1)
-      this.getMarker()
+      this.$getMarker()
 
       //* 把資料傳回 store
       this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
-    },
-    //* 取得時間軸標記
-    getMarker () {
-      const progessEl = this.plyr
-
-      let hasmMarkerWarp = null
-      this.plyr.elements.progress.children.forEach(item => {
-        //* 如果有 markerWarp 就不再重複生成 markerWarp 了
-        if (item.getAttribute('id') === 'markerWarp') {
-          hasmMarkerWarp = true
-        }
-      })
-      //! 如果沒有 markerWarp 才生成 markerWarp
-      if (!hasmMarkerWarp) {
-        //* 生成一個 span(markerWarp) 掛在 progess 底下，用來掛載所有標記按鈕
-        const span = document.createElement('span')
-        span.setAttribute('id', 'markerWarp')
-        progessEl.appendChild(span)
-        hasmMarkerWarp = true
-      }
-      setTimeout(() => {
-        let str = ''
-        //* 得到問題顯示時間在影片中的%數位置
-        this.questionsList.forEach(item => {
-        //* 題目位置 = 題目位置時間 / 影片總時間 *100
-          const questionTime = Math.floor(parseInt(item.showTime) / parseInt(this.plyr.duration) * 100)
-          //* 生成標記
-          str += `
-          <button type="button" class="marker" id="markerWarp" style="left:${questionTime}%" data-questionTime="${item.showTime}"
-            data-bs-toggle="tooltip" data-bs-placement="bottom"></button>
-          `
-        })
-        //* 使用 innerHTML 的方式覆蓋，才不會有重複生成的元素
-        const markerWarp = document.getElementById('markerWarp')
-        if (markerWarp) {
-          markerWarp.innerHTML = str
-        }
-      }, 100)
     },
     //* 權重提高
     addIndex (index) {
