@@ -17,6 +17,10 @@ import {
   $currentMarkStyle,
   $hoverMarkerTips
 } from './methods/marker'
+//* 影片相關方法
+import {
+  $questionShowVidStop
+} from './methods/video'
 
 import App from './App.vue'
 import router from './router'
@@ -28,6 +32,7 @@ app.config.globalProperties.$getMarker = $getMarker
 app.config.globalProperties.$goVideoMarkerPosition = $goVideoMarkerPosition
 app.config.globalProperties.$currentMarkStyle = $currentMarkStyle
 app.config.globalProperties.$hoverMarkerTips = $hoverMarkerTips
+app.config.globalProperties.$questionShowVidStop = $questionShowVidStop
 
 app.use(Vuex)
 app.use(store)
