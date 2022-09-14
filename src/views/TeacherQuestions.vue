@@ -71,7 +71,7 @@ export default {
       this.player.pause()
       this.questionsList.push({
         id: this.randomString(),
-        showTime: this.videoTime,
+        showTime: Math.floor(this.videoTime),
         //* 影片播放器的左上角座標 (新增題目時才會出現在限制區域中的左上角)
         x: this.dropWrap.offsetLeft,
         y: this.dropWrap.offsetTop,

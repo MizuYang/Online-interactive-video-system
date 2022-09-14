@@ -1,7 +1,7 @@
 <template>
   <template v-for="(question, index) in questionsList2" :key="`questionItem${index}`">
       <div class="bg-info text-center px-3 py-3" :class="{drop: isTeacherQuePage, 'drop-style':isTeacherQuePage, poa: $route.path==='/examStart'||$route.path==='/youtubeVideo'}" @mousedown="dragStart($event,`dropItem${index}`)" :data-question-id="question.id"
-          :ref="`dropItem${index}`" :style="{left:`${noTeacherQuePageLoseX(question.x)}px`, top:`${noTeacherQuePageLoseY(question.y)}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="videoTime>=question.showTime&&videoTime<=question.showTime+0.5">
+          :ref="`dropItem${index}`" :style="{left:`${noTeacherQuePageLoseX(question.x)}px`, top:`${noTeacherQuePageLoseY(question.y)}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="Math.floor(videoTime)>=question.showTime&&Math.floor(videoTime)<=question.showTime+1">
         <div class="d-flex justify-content-between">
           <h3 class="text-center">第{{ index+1 }}題</h3>
           <div v-if="isTeacherQuePage">

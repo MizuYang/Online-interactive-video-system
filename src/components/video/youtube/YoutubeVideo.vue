@@ -8,8 +8,8 @@
   <div class="por w-75" ref="dropWrap2" @click="$goVideoMarkerPosition">
 
     <!-- Youtube 影片播放器 -->
-    <div class="plyr__video-embed" id="player" v-show="questionsList2.length>0">
-      <iframe src="https://www.youtube.com/watch?v=B-BQnCwTBeQ"
+    <div class="plyr__video-embed" id="player" ref="yt" v-show="questionsList2.length>0">
+      <iframe src="https://www.youtube.com/watch?v=B-BQnCwTBeQ?rel=0&amp;showinfo=0?ecver=2"
               allowfullscreen allowtransparency allow="autoplay">
       </iframe>
     </div>
@@ -55,7 +55,7 @@ export default {
     this.dropWrap2 = this.$refs.dropWrap2
     this.player = new Plyr('#player', {
       // noCookie: false,
-      // rel: 0,
+      rel: 0, //* 只會顯示該頻道的影片，不會顯示其他頻道的影片
       // showinfo: 0,
       // iv_load_policy: 3,
       // modestbranding: 1,
@@ -124,5 +124,9 @@ export default {
 }
 .marker:hover {
   background-color: blue !important;
+}
+//* 提高權重，用戶才可以手動關閉到播放器暫停時 youtube 顯示的推薦影片視窗
+.plyr iframe {
+    z-index: 2;
 }
 </style>

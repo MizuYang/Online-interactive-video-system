@@ -2,7 +2,7 @@
 export function $questionShowVidStop () {
   this.questionsList.forEach((question, index, arr) => {
   //* 如果影片時間抵達題目顯示時間時
-    if (this.videoTime >= question.showTime && this.videoTime <= question.showTime + 0.5) {
+    if (Math.floor(this.videoTime) >= question.showTime && Math.floor(this.videoTime) <= question.showTime + 1) {
     //* 如果沒鎖定暫停影片時
       if (!this.vidStopDisabled) {
       //* 鎖定暫停
