@@ -1,34 +1,24 @@
 <template>
   <template v-for="(question, index) in questionsList2" :key="`questionItem${index}`">
-      <div class="bg-info text-center px-3 py-3" :class="{drop: isTeacherQuePage, 'drop-style':isTeacherQuePage, poa: $route.path==='/examStart'||$route.path==='/youtubeVideo'}" @mousedown="dragStart($event,`dropItem${index}`)" :data-question-id="question.id"
-          :ref="`dropItem${index}`" :style="{left:`${noTeacherQuePageLoseX(question.x)}px`, top:`${noTeacherQuePageLoseY(question.y)}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="Math.floor(videoTime)>=question.showTime&&Math.floor(videoTime)<=question.showTime+1">
+      <div class="bg-info text-center px-3 py-3" :class="{drop: isTeacherQuePage, 'drop-style':isTeacherQuePage, poa: $route.path==='/examStart'||$route.path==='/youtubeVideo'}" @mousedown="dragStart($event,`dropItem_${index}`)" :data-question-id="question.id"
+          :ref="`dropItem_${index}`" :style="{left:`${noTeacherQuePageLoseX(question.x)}px`, top:`${noTeacherQuePageLoseY(question.y)}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="Math.floor(videoTime)>=question.showTime&&Math.floor(videoTime)<=question.showTime+1">
         <div class="d-flex justify-content-between">
-          <h3 class="text-center">第{{ index+1 }}題</h3>
+          <h3 class="text-center">{{ question.group }}{{ index+1 }}</h3>
           <div v-if="isTeacherQuePage">
               <button type="button" class="btn btn-danger btn-sm ms-3 d-inline-block" @click="deleteQuestion(question.id)">X</button>
           </div>
         </div>
         <div class="text-start mb-0">
-          標題
           <template v-if="isTeacherQuePage">
             <button type="button" @click="loseIndex(index)" :disabled="!questionsList2[index].zIndex||questionsList2[index].zIndex<=0">－</button>
             <button type="button" @click="addIndex(index)">＋</button>
-            權重：<span :ref="`zIndexNum${index}`">0</span>
+            權重：<span :ref="`zIndexNum_${index}`">0</span>
           </template>
         </div>
-        <input type="text" :class="{'drop-style': isTeacherQuePage}" v-model.lazy="questionsList2[index].title">
-
-        <p class="text-start mb-0">內容</p>
-        <input type="text" :class="{'drop-style': isTeacherQuePage}" v-model.lazy="questionsList2[index].content">
-
-        <p class="text-start mb-0">答案</p>
-        <input type="text" :class="{'drop-style': isTeacherQuePage}" v-model.lazy="questionsList2[index].answer">
 
         <div v-if="isTeacherQuePage">
-
           <!-- 拖曳按鈕 -->
           <DropBtn :dropWrap="dropWrap" :index="index"></DropBtn>
-
         </div>
       </div>
     </template>
@@ -134,17 +124,17 @@ export default {
     },
     //* 權重提高
     addIndex (index) {
-      this.$refs[`dropItem${index}`][0].style.zIndex++
-      this.$refs[`zIndexNum${index}`][0].textContent = this.$refs[`dropItem${index}`][0].style.zIndex
-      this.questionsList[index].zIndex = this.$refs[`dropItem${index}`][0].style.zIndex
+      this.$refs[`dropItem_${index}`][0].style.zIndex++
+      this.$refs[`zIndexNum_${index}`][0].textContent = this.$refs[`dropItem_${index}`][0].style.zIndex
+      this.questionsList[index].zIndex = this.$refs[`dropItem_${index}`][0].style.zIndex
       //* 把資料傳回 store
       this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })
     },
     //* 權重降低
     loseIndex (index) {
-      this.$refs[`dropItem${index}`][0].style.zIndex--
-      this.$refs[`zIndexNum${index}`][0].textContent = this.$refs[`dropItem${index}`][0].style.zIndex
-      this.questionsList[index].zIndex = this.$refs[`dropItem${index}`][0].style.zIndex
+      this.$refs[`dropItem_${index}`][0].style.zIndex--
+      this.$refs[`zIndexNum_${index}`][0].textContent = this.$refs[`dropItem_${index}`][0].style.zIndex
+      this.questionsList[index].zIndex = this.$refs[`dropItem_${index}`][0].style.zIndex
 
       //* 把資料傳回 store
       this.$store.commit('SAVE_QUESTIONS_LIST', { questionsList: this.questionsList })

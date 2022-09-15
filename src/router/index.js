@@ -20,6 +20,11 @@ const routes = [
     path: '/youtubeVideo',
     name: 'youtubeVideo',
     component: () => import('../views/YoutubeWrap.vue')
+  },
+  {
+    path: '/queGroup',
+    name: 'queGroup',
+    component: () => import('../views/QueGroup.vue')
   }
   // { //* 代表所有主頁面下的頁面，路由錯誤都會被導向
   //   path: '/:pathMatch(.*)*',

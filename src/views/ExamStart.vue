@@ -12,7 +12,7 @@
       <!--  影片播放器 -->
       <VideoPlyr></VideoPlyr>
 
-      <!--  題目 -->
+      <!--  題目視窗 -->
       <QuestionsList :dropWrap="dropWrap2" :videoTime="videoTime"></QuestionsList>
 
     </div>

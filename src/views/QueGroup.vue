@@ -2,18 +2,26 @@
   <div class="container my-5">
     <!--  教師新增題目 -->
     <div class="my-4">
-      <h2>教師出題</h2>
+      <h2>教師出題(題組)</h2>
       <button type="button" @click="addQuestions">新增題目</button>
       <input type="checkbox" class="ms-3" id="autoplay" v-model="options.autoplay" @change="setAutoplay">
       <label for="autoplay">自動播放</label>
+      <div class="my-3">
+        <!-- 題組按鈕 -->
+        <QueGroupBtnList :dropWrap="dropWrap" :videoTime="videoTime"></QueGroupBtnList>
+        <div class="my-3">
+          <!-- 題目設定 -->
+          <SettingQue></SettingQue>
+        </div>
+      </div>
     </div>
 
-    <div class="w-75" @click="$goVideoMarkerPosition" ref="dropWrap">
+    <div class="w-75" @click="$goVideoMarkerPosition" ref="dropWrap3">
       <!--  影片播放器 -->
       <VideoPlyr></VideoPlyr>
 
       <!--  題目視窗 -->
-      <QuestionsList :dropWrap="dropWrap" :videoTime="videoTime"></QuestionsList>
+      <QueGroupList :dropWrap="dropWrap" :videoTime="videoTime"></QueGroupList>
     </div>
 
     <!-- 確認出題按鈕 -->
@@ -27,11 +35,15 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import VideoPlyr from '../components/video/plyr/PlyrVideo.vue'
-import QuestionsList from '../components/video/drop/QuestionsList.vue'
+import QueGroupList from '../components/video/drop/QueGroupList.vue'
+import QueGroupBtnList from '../components/question/QueGroupBtnList.vue'
+import SettingQue from '../components/question/SettingQue.vue'
 export default {
   components: {
     VideoPlyr,
-    QuestionsList
+    QueGroupList,
+    QueGroupBtnList,
+    SettingQue
   },
 
   data () {
@@ -112,7 +124,7 @@ export default {
   mounted () {
     //* 取得播放器元素
     this.player = this.plyr
-    this.dropWrap = this.$refs.dropWrap
+    this.dropWrap = this.$refs.dropWrap3
 
     if (this.questionsList2.length > 0) {
       this.questionsList = this.questionsList2

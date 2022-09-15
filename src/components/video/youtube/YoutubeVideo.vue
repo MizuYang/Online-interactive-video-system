@@ -14,7 +14,7 @@
       </iframe>
     </div>
 
-    <!-- 題目 -->
+    <!-- 題目視窗 -->
     <QuestionsList :dropWrap="dropWrap2" :videoTime="videoTime"></QuestionsList>
 
     <h3 class="text-danger my-5" v-show="questionsList2.length===0">
