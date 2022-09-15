@@ -13,7 +13,8 @@ export default {
   data () {
     return {
       questionsList: [],
-      queGroupList: ['文字區塊', ' 單選題', ' 複選題', ' 克漏字', ' 重組題', ' 問答題', ' 題組']
+      queGroupList: ['文字區塊', '單選題', '複選題', '克漏字', '重組題', '問答題', '題組']
+
     }
   },
 
