@@ -44,16 +44,10 @@ export function $goVideoMarkerPosition (e) {
   if (isTimelineBtn) {
     this.player.pause()
     const questionTime = e.target.getAttribute('data-questionTime')
-    // this.player.currentTime = parseInt(questionTime)
-    //! 測試解決 Youtube 頁面跳轉標籤後，時間軸滾動圈不會移動到標籤問題
-    if (this.$route.path === 'youtubeVideo') {
-      setTimeout(() => {
-        this.player.currentTime = parseInt(questionTime) - 0.1
-        this.player.play()
-      //   setTimeout(() => {
-      //     this.player.pause()
-      //   }, 350)
-      }, 500)
+    //* 解決 Youtube 頁面跳轉標籤後，時間軸滾動圈不會移動到標籤問題
+    if (this.$route.path === '/youtubeVideo') {
+      this.player.play()
+      this.player.currentTime = parseInt(questionTime) - 0.5
     } else {
       this.player.currentTime = parseInt(questionTime)
     }
