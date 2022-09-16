@@ -2,69 +2,84 @@
 <div class="row row-cols-5">
     <div class="border" v-for="(que,index) in questionsList" :key="que.id">
       <label :for="que.id">題目( {{ que.group }}{{ index+1 }} )</label> <br />
-      <textarea :id="que.id" cols="25" rows="4"></textarea>
+      <textarea :id="que.id" cols="25" rows="4" v-model="questionsList[index].heading"></textarea>
 
       <!-- 文字區塊 -->
       <div v-if="que.group==='文字區塊'">
         輸入答案 <br />
-        <textarea id="" cols="25" rows="4"></textarea>
+        <textarea id="" cols="25" rows="4" v-model="questionsList[index].answer"></textarea>
+        答案：{{ this.questionsList[index].answer }}
       </div>
       <!-- 單選題 -->
       <div v-if="que.group==='單選題'">
         選擇答案 <br />
-        <input type="radio" class="me-2">
-        <input type="text" class="mb-1"> <br />
-        <input type="radio" class="me-2">
-        <input type="text" class="mb-1"> <br />
-        <input type="radio" class="me-2">
-        <input type="text" class="mb-1"> <br />
-        <input type="radio" class="me-2">
-        <input type="text" class="mb-1"> <br />
+        <input :name="`radio${que.id}`" type="radio" class="me-2" v-model="questionsList[index].answer" :value="questionsList[index].op1">
+        <input type="text" class="mb-1" v-model="questionsList[index].op1"> <br />
+        <input :name="`radio${que.id}`" type="radio" class="me-2" v-model="questionsList[index].answer" :value="questionsList[index].op2">
+        <input type="text" class="mb-1" v-model="questionsList[index].op2"> <br />
+        <input :name="`radio${que.id}`" type="radio" class="me-2" v-model="questionsList[index].answer" :value="questionsList[index].op3">
+        <input type="text" class="mb-1" v-model="questionsList[index].op3"> <br />
+        <input :name="`radio${que.id}`" type="radio" class="me-2" v-model="questionsList[index].answer" :value="questionsList[index].op4">
+        <input type="text" class="mb-1" v-model="questionsList[index].op4"> <br />
+        答案：{{ this.questionsList[index].answer }}
       </div>
 
       <!-- 複選題 -->
       <div v-if="que.group==='複選題'">
         選擇答案 <br />
-        <input type="checkbox" class="me-2">
-        <input type="text" class="mb-1"> <br />
-        <input type="checkbox" class="me-2">
-        <input type="text" class="mb-1"> <br />
-        <input type="checkbox" class="me-2">
-        <input type="text" class="mb-1"> <br />
-        <input type="checkbox" class="me-2">
-        <input type="text" class="mb-1"> <br />
+        <!-- <input type="checkbox" class="me-2" v-model="questionsList[index].answer" :value="questionsList[index].op1"> -->
+        <input type="checkbox" class="me-2" :value="questionsList[index].op1" @change="getChebxAnswer($event,index,questionsList[index].op1)">
+        <input type="text" class="mb-1" v-model="questionsList[index].op1"> <br />
+
+        <!-- <input type="checkbox" class="me-2" v-model="questionsList[index].answer" :value="questionsList[index].op2"> -->
+        <input type="checkbox" class="me-2" :value="questionsList[index].op2" @change="getChebxAnswer($event,index,questionsList[index].op2)">
+        <input type="text" class="mb-1" v-model="questionsList[index].op2"> <br />
+
+        <!-- <input type="checkbox" class="me-2" v-model="questionsList[index].answer" :value="questionsList[index].op3"> -->
+        <input type="checkbox" class="me-2" :value="questionsList[index].op3" @change="getChebxAnswer($event,index,questionsList[index].op3)">
+        <input type="text" class="mb-1" v-model="questionsList[index].op3"> <br />
+
+        <!-- <input type="checkbox" class="me-2" v-model="questionsList[index].answer" :value="questionsList[index].op4"> -->
+        <input type="checkbox" class="me-2" :value="questionsList[index].op4" @change="getChebxAnswer($event,index,questionsList[index].op4)">
+        <input type="text" class="mb-1" v-model="questionsList[index].op4"> <br />
+        答案：{{ this.questionsList[index].answer }}
       </div>
 
       <!-- 克漏字 -->
       <div v-if="que.group==='克漏字'">
         輸入答案 <br />
         判斷有幾個問題空格，就迴圈渲染幾個文字欄位
-        <input type="text" class="mb-1">
+        <input type="text" class="mb-1" v-model="questionsList[index].answer">
+        答案：{{ this.questionsList[index].answer }}
       </div>
 
       <!-- 重組題 -->
-      <div v-if="que.group==='重組題'" class="d-flex justify-content-between">
-        <div>
-          <input type="text" class="mb-1" size="11"> <br />
-          <input type="text" class="mb-1" size="11"> <br />
-          <input type="text" class="mb-1" size="11"> <br />
-          <input type="text" class="mb-1" size="11"> <br />
+      <div>
+        <div v-if="que.group==='重組題'" class="d-flex justify-content-between">
+          <div>
+            <input type="text" class="mb-1" v-model="questionsList[index].answer" size="11"> <br />
+            <input type="text" class="mb-1" v-model="questionsList[index].answer" size="11"> <br />
+            <input type="text" class="mb-1" v-model="questionsList[index].answer" size="11"> <br />
+            <input type="text" class="mb-1" v-model="questionsList[index].answer" size="11"> <br />
+          </div>
+          <div class="drop-area-style text-center w-50">拖曳到此處</div> <br>
         </div>
-        <div class="drop-area-style text-center w-50">拖曳到此處</div>
+          答案：{{ this.questionsList[index].answer }}
       </div>
 
       <!-- 問答題 -->
       <div v-if="que.group==='問答題'">
         輸入答案 <br />
-        <textarea id="" cols="25" rows="4"></textarea>
+        <textarea id="" cols="25" rows="4" v-model="questionsList[index].answer"></textarea>
+        答案：{{ this.questionsList[index].answer }}
       </div>
 
       <!-- 題組 -->
       <div v-if="que.group==='題組'">
         輸入答案 <br />
-        <textarea id="" cols="25" rows="4"></textarea>
+        <textarea id="" cols="25" rows="4" v-model="questionsList[index].answer"></textarea>
+        答案：{{ this.questionsList[index].answer }}
       </div>
-
     </div>
   </div>
 
@@ -93,6 +108,35 @@ export default {
   },
 
   methods: {
+    //* 取得 checkbox 的答案
+    getChebxAnswer (e, index, val) {
+      //* 若沒有 answer 這個陣列就先初始化再推勾選項目進去
+      if (!this.questionsList[index].answer) {
+        this.questionsList[index].answer = []
+        this.questionsList[index].answer.push(val)
+      } else {
+        //* 若已有 answer 先判斷是否已有勾選項目，若有代表是取消勾選，需要移除val
+        if (this.questionsList[index].answer.includes(val)) {
+          //* 找出該勾選項目索引，並刪除
+          const deleteIndex = this.questionsList[index].answer.findIndex(checkboxItem => {
+            return checkboxItem === val
+          })
+          this.questionsList[index].answer.splice(deleteIndex, 1)
+        } else {
+          //* 若 answer 中沒有該勾選項目，則推送進去
+          this.questionsList[index].answer.push(val)
+        }
+      }
+      //! 方法一
+      //! 先判斷questionsList[index].answer(陣列)裡有沒有這個值
+      //! 如果有，就代表這次點擊是移除，就必須取得索引位置來刪除
+      //! 如果沒有，就把值push進去questionsList[index].answer
+
+      // ? 方法二
+      // ? 在 checkbox標籤中加入 :checked="questionsList[index].answer.include(value)"
+      // ? change 事件
+      // ? 寫一個判斷如果 e.target有checked這個屬性的話，那就是取消勾選，如果沒有的話就push進去questionsList[index].answer
+    }
   },
 
   mounted () {
