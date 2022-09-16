@@ -1,19 +1,65 @@
 <template>
   <template v-for="(question, index) in questionsList2" :key="`questionItem${index}`">
-      <div class="bg-info text-center px-3 py-3" :class="{drop: isTeacherQuePage, 'drop-style':isTeacherQuePage, poa: $route.path==='/examStart'||$route.path==='/youtubeVideo'}" @mousedown="dragStart($event,`dropItem_${index}`)" :data-question-id="question.id"
+      <div class="bg-info" :class="{drop: isTeacherQuePage, 'drop-style':isTeacherQuePage, poa: $route.path==='/examStart'||$route.path==='/youtubeVideo'}" @mousedown="dragStart($event,`dropItem_${index}`)" :data-question-id="question.id"
           :ref="`dropItem_${index}`" :style="{left:`${noTeacherQuePageLoseX(question.x)}px`, top:`${noTeacherQuePageLoseY(question.y)}px`,width:`${question.width}px`, height: `${question.height}px`}" v-show="Math.floor(videoTime)>=question.showTime&&Math.floor(videoTime)<=question.showTime+1">
-        <div class="d-flex justify-content-between">
+        <div class="por">
           <h3 class="text-center">{{ question.group }}{{ index+1 }}</h3>
-          <div v-if="isTeacherQuePage">
+          <div v-if="isTeacherQuePage" class="poa top-0 end-0">
               <button type="button" class="btn btn-danger btn-sm ms-3 d-inline-block" @click="deleteQuestion(question.id)">X</button>
           </div>
         </div>
-        <div class="text-start mb-0">
+        <div class="text-center mb-0">
           <template v-if="isTeacherQuePage">
             <button type="button" @click="loseIndex(index)" :disabled="!questionsList2[index].zIndex||questionsList2[index].zIndex<=0">－</button>
             <button type="button" @click="addIndex(index)">＋</button>
             權重：<span :ref="`zIndexNum_${index}`">0</span>
           </template>
+
+          <!-- 題目、答案選項 -->
+          <p>{{ question.heading }}</p>
+
+          <!-- 文字區塊 -->
+          <div v-if="question.group==='文字區塊'">
+            輸入答案：
+            <br />
+            <textarea id="" cols="25" rows="4" v-model="questionsList[index].studentAanswer"></textarea>
+          </div>
+
+          <!-- 單選題  -->
+          <div v-if="question.group==='單選題'">
+單選題
+          </div>
+
+          <!-- 複選題  -->
+          <div v-if="question.group==='複選題'">
+複選題
+          </div>
+
+          <!-- 克漏字  -->
+          <div v-if="question.group==='克漏字'">
+克漏字
+          </div>
+
+          <!-- 重組題  -->
+          <div v-if="question.group==='重組題'">
+重組題
+          </div>
+
+          <!-- 問答題  -->
+          <div v-if="question.group==='問答題'">
+問答題
+          </div>
+
+          <!-- 題組 -->
+          <div v-if="question.group==='題組'">
+題組
+          </div>
+
+          <!-- 提交按鈕 -->
+          <div class="text-center">
+            <button type="button">提交</button>
+          </div>
+
         </div>
 
         <div v-if="isTeacherQuePage">
@@ -168,5 +214,8 @@ export default {
 <style lang='scss' scope>
 .poa {
   position: absolute;
+}
+.por {
+  position: relative;
 }
 </style>
