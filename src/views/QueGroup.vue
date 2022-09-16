@@ -1,5 +1,13 @@
 <template>
   <div class="container my-5">
+    <div class="w-75" @click="$goVideoMarkerPosition" ref="dropWrap3">
+      <!--  影片播放器 -->
+      <VideoPlyr></VideoPlyr>
+
+      <!--  題目視窗 -->
+      <QueGroupList :dropWrap="dropWrap" :videoTime="videoTime"></QueGroupList>
+    </div>
+
     <!--  教師新增題目 -->
     <div class="my-4">
       <h2>教師出題(題組)</h2>
@@ -14,14 +22,6 @@
           <SettingQue></SettingQue>
         </div>
       </div>
-    </div>
-
-    <div class="w-75" @click="$goVideoMarkerPosition" ref="dropWrap3">
-      <!--  影片播放器 -->
-      <VideoPlyr></VideoPlyr>
-
-      <!--  題目視窗 -->
-      <QueGroupList :dropWrap="dropWrap" :videoTime="videoTime"></QueGroupList>
     </div>
 
     <!-- 確認出題按鈕 -->

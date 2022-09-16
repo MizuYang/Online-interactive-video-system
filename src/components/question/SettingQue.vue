@@ -46,12 +46,13 @@
         輸入答案 <br />
         判斷有幾個問題空格，就迴圈渲染幾個文字欄位
         <input type="text" class="mb-1" v-model="questionsList[index].answer">
+        <br>
         答案：{{ this.questionsList[index].answer }}
       </div>
 
       <!-- 重組題 -->
-      <div>
-        <div v-if="que.group==='重組題'" class="d-flex justify-content-between">
+      <div v-if="que.group==='重組題'">
+        <div class="d-flex justify-content-between">
           <!-- 答案選項欄位 -->
           <div>
             <input type="text" class="mb-1" v-model="questionsList[index].op1" size="11" @input="getQueList(index)"> <br />
@@ -61,7 +62,7 @@
           </div>
           <!-- 拖曳區塊 -->
           <transition-group class="list drop-area-style text-center w-50 p-1" tag="ul" name="drag">
-            <li  v-for="(ans,dropItemIndex) in questionsList[index].dropArr" :key="`ans${dropItemIndex}`"
+            <li v-for="(ans,dropItemIndex) in questionsList[index].dropArr" :key="`ans${dropItemIndex}`"
                 class="bg-dark text-light my-1" draggable="true"
                 @dragstart="getDragItemIndex(index,dropItemIndex)"
                 @dragenter.prevent="changePosition(index,dropItemIndex)">
@@ -70,7 +71,7 @@
           </transition-group>
           <br>
         </div>
-          答案：{{ this.questionsList[index].answer }}
+        答案：{{ this.questionsList[index].answer }}
       </div>
 
       <!-- 問答題 -->
