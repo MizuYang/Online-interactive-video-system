@@ -52,13 +52,14 @@
       <!-- 重組題 -->
       <div>
         <div v-if="que.group==='重組題'" class="d-flex justify-content-between">
+          <!-- 答案選項欄位 -->
           <div>
             <input type="text" class="mb-1" v-model="questionsList[index].op1" size="11" @input="getQueList(index)"> <br />
             <input type="text" class="mb-1" v-model="questionsList[index].op2" size="11" @input="getQueList(index)"> <br />
             <input type="text" class="mb-1" v-model="questionsList[index].op3" size="11" @input="getQueList(index)"> <br />
             <input type="text" class="mb-1" v-model="questionsList[index].op4" size="11" @input="getQueList(index)"> <br />
           </div>
-
+          <!-- 拖曳區塊 -->
           <transition-group class="list drop-area-style text-center w-50 p-1" tag="ul" name="drag">
             <li  v-for="(ans,dropItemIndex) in questionsList[index].dropArr" :key="`ans${dropItemIndex}`"
                 class="bg-dark text-light my-1" draggable="true"
