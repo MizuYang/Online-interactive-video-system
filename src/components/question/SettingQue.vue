@@ -27,19 +27,15 @@
       <!-- 複選題 -->
       <div v-if="que.group==='複選題'">
         選擇答案 <br />
-        <!-- <input type="checkbox" class="me-2" v-model="questionsList[index].answer" :value="questionsList[index].op1"> -->
         <input type="checkbox" class="me-2" :value="questionsList[index].op1" @change="getChebxAnswer($event,index,questionsList[index].op1)">
         <input type="text" class="mb-1" v-model="questionsList[index].op1"> <br />
 
-        <!-- <input type="checkbox" class="me-2" v-model="questionsList[index].answer" :value="questionsList[index].op2"> -->
         <input type="checkbox" class="me-2" :value="questionsList[index].op2" @change="getChebxAnswer($event,index,questionsList[index].op2)">
         <input type="text" class="mb-1" v-model="questionsList[index].op2"> <br />
 
-        <!-- <input type="checkbox" class="me-2" v-model="questionsList[index].answer" :value="questionsList[index].op3"> -->
         <input type="checkbox" class="me-2" :value="questionsList[index].op3" @change="getChebxAnswer($event,index,questionsList[index].op3)">
         <input type="text" class="mb-1" v-model="questionsList[index].op3"> <br />
 
-        <!-- <input type="checkbox" class="me-2" v-model="questionsList[index].answer" :value="questionsList[index].op4"> -->
         <input type="checkbox" class="me-2" :value="questionsList[index].op4" @change="getChebxAnswer($event,index,questionsList[index].op4)">
         <input type="text" class="mb-1" v-model="questionsList[index].op4"> <br />
         答案：{{ this.questionsList[index].answer }}
@@ -57,12 +53,21 @@
       <div>
         <div v-if="que.group==='重組題'" class="d-flex justify-content-between">
           <div>
-            <input type="text" class="mb-1" v-model="questionsList[index].answer" size="11"> <br />
-            <input type="text" class="mb-1" v-model="questionsList[index].answer" size="11"> <br />
-            <input type="text" class="mb-1" v-model="questionsList[index].answer" size="11"> <br />
-            <input type="text" class="mb-1" v-model="questionsList[index].answer" size="11"> <br />
+            <input type="text" class="mb-1" v-model="questionsList[index].op1" size="11" @input="getQueList(index)"> <br />
+            <input type="text" class="mb-1" v-model="questionsList[index].op2" size="11" @input="getQueList(index)"> <br />
+            <input type="text" class="mb-1" v-model="questionsList[index].op3" size="11" @input="getQueList(index)"> <br />
+            <input type="text" class="mb-1" v-model="questionsList[index].op4" size="11" @input="getQueList(index)"> <br />
           </div>
-          <div class="drop-area-style text-center w-50">拖曳到此處</div> <br>
+
+          <transition-group class="list drop-area-style text-center w-50 p-1" tag="ul" name="drag">
+            <li  v-for="(ans,dropItemIndex) in questionsList[index].dropArr" :key="`ans${dropItemIndex}`"
+                class="bg-dark text-light my-1" draggable="true"
+                @dragstart="getDragItemIndex(index,dropItemIndex)"
+                @dragenter.prevent="changePosition(index,dropItemIndex)">
+                {{ ans }}
+            </li>
+          </transition-group>
+          <br>
         </div>
           答案：{{ this.questionsList[index].answer }}
       </div>
@@ -93,7 +98,8 @@ export default {
 
   data () {
     return {
-      questionsList: []
+      questionsList: [],
+      currentDragIndex: 0
     }
   },
 
@@ -136,6 +142,36 @@ export default {
       // ? 在 checkbox標籤中加入 :checked="questionsList[index].answer.include(value)"
       // ? change 事件
       // ? 寫一個判斷如果 e.target有checked這個屬性的話，那就是取消勾選，如果沒有的話就push進去questionsList[index].answer
+    },
+    //* 取得 重組題答案
+    getQueList (index) {
+      this.questionsList[index].dropArr = []
+      for (let i = 0; i <= 4; i++) {
+        if (this.questionsList[index][`op${i}`]) {
+          this.questionsList[index].dropArr.push(this.questionsList[index][`op${i}`])
+        }
+      }
+    },
+    //* 開始拖動: 取得拖動對象的索引
+    getDragItemIndex (index, dropItemIndex) {
+      this.questionsList[index].currentDragIndex = dropItemIndex
+    },
+    //* 移動到目標位置: 交換位置
+    changePosition (index, dropItemIndex) {
+      const dropArr = this.questionsList[index].dropArr
+      const currentIndex = this.questionsList[index].currentDragIndex
+      //* 將當前目標先存起來
+      const tempCurrentEl = dropArr[currentIndex]
+
+      //* 將拖動目標刪除，直接插隊到目標位置
+      dropArr.splice(currentIndex, 1)
+      dropArr.splice(dropItemIndex, 0, tempCurrentEl)
+
+      //* 因拖動元素移到目標位置了，所以要將自己原先索引改為目標索引
+      this.questionsList[index].currentDragIndex = dropItemIndex
+
+      //* 將答案傳回題目資料集
+      this.questionsList[index].answer = dropArr
     }
   },
 
