@@ -1,0 +1,1 @@
+:root{--plyr-color-main:#1ac266}.w30{max-width:30%}.box2{max-width:50%}.rwd{max-width:100%;height:auto}.por{position:relative}.poa{position:absolute}.ball{display:block;border:3px solid #000;height:15px;width:1px;z-index:10}.ball,.box{position:absolute;top:0}.box{left:0;z-index:50;padding:8px 2px;background-color:red}.box:hover{background-color:blue}
